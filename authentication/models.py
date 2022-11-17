@@ -32,3 +32,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     object = UserManager()
+
+    class Meta:
+        db_table = 'users'
