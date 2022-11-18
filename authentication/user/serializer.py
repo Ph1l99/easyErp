@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from authentication.profile import UserProfile
@@ -28,4 +29,21 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             last_name=profile['last_name'],
             username=profile['username']
         )
+        return user
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=128, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+
+    def validate(self, attrs):
+        email = attrs.get('email', None)
+        password = attrs.get('password', None)
+        user = authenticate(email=email, password=password)
+        if user is None:
+            raise serializers.ValidationError('User Not Found')
         return user
