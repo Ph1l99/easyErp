@@ -21,7 +21,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         profile = validated_data.pop('profile')
 
-        user = User.objects.create_user(**validated_data)
+        user = User.object.create_user(**validated_data)
         UserProfile.objects.create(
             user=user,
             first_name=profile['first_name'],
