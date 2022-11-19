@@ -11,4 +11,5 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=20)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_approved = models.BooleanField(default=False)
 
