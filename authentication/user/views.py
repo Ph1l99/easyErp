@@ -1,3 +1,4 @@
+from django.contrib.auth.models import update_last_login
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
@@ -32,6 +33,7 @@ class UserLoginView(CreateAPIView):
             user = User.objects.get(email=request.data.get('email'))
             profile = UserProfile.objects.get(user__id=user.id, is_approved=True)
             if profile is not None:
+                update_last_login(None, user=user)
                 refresh = RefreshToken.for_user(user)
                 response = {
                     'access': str(refresh.access_token),
