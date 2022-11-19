@@ -12,5 +12,5 @@ class UserProfileView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return Response(UserProfileSerializer(UserProfile.objects.get(user_id=self.request.user.id)).data,
+        return Response(UserProfileSerializer(UserProfile.objects.get(user__id=self.request.user.id)).data,
                         status=status.HTTP_200_OK)
