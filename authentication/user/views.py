@@ -2,8 +2,11 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from authentication.user.serializers import UserRegistrationSerializer
+from authentication.profile import UserProfile
+from authentication.user import User
+from authentication.user.serializers import UserRegistrationSerializer, UserLoginSerializer
 
 
 class UserRegistrationView(CreateAPIView):
@@ -16,4 +19,23 @@ class UserRegistrationView(CreateAPIView):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
 
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginView(CreateAPIView):
+    serializer_class = UserLoginSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.get(email=request.data.get('email'))
+            profile = UserProfile.objects.get(user_id=user.id)
+            if profile is not None:
+                refresh = RefreshToken.for_user(user)
+                response = {
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh)
+                }
+                return Response(response, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
