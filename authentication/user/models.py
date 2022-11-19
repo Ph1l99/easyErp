@@ -31,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    object = UserManager()
+    objects = UserManager()
 
     class Meta:
         db_table = 'users'
