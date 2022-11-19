@@ -30,7 +30,7 @@ class UserLoginView(CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(email=request.data.get('email'))
-            profile = UserProfile.objects.get(user__id=user.id)
+            profile = UserProfile.objects.get(user__id=user.id, is_approved=True)
             if profile is not None:
                 refresh = RefreshToken.for_user(user)
                 response = {
