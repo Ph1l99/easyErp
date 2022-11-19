@@ -4,7 +4,7 @@ from authentication.profile import UserProfile
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('last_name', 'first_name', 'username')
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
