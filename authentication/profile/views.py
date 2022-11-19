@@ -8,8 +8,8 @@ from authentication.profile.serializers import UserProfileSerializer
 
 
 class UserProfileView(RetrieveAPIView):
+    serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
-    serializer_class = [UserProfileSerializer]
 
     def get(self, request, *args, **kwargs):
         return Response(UserProfileSerializer(UserProfile.objects.get(user_id=self.request.user.id)).data,
