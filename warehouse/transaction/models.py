@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.utils import timezone
 
 
 class TransactionReference(models.Model):
@@ -23,7 +24,7 @@ class TransactionDetail(models.Model):
 
 class Transaction(models.Model):
     details = models.ManyToManyField(TransactionDetail, related_name='transaction')
-    date_and_time = models.DateTimeField(default=datetime.datetime.utcnow())
+    date_and_time = models.DateTimeField(default=timezone.now())
     username = models.CharField(max_length=20)
 
     def __str__(self):
