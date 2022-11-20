@@ -7,7 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from authentication.profile import UserProfile
 from authentication.user import User
-from authentication.user.serializers import UserRegistrationSerializer, UserLoginSerializer
+from authentication.user.serializers import UserRegistrationSerializer, UserLoginSerializer, \
+    UserUpdatePasswordSerializer
 
 
 class UserRegistrationView(CreateAPIView):
@@ -44,12 +45,17 @@ class UserLoginView(CreateAPIView):
 
 
 class UserUpdatePasswordView(UpdateAPIView):
+    serializer_class = UserUpdatePasswordSerializer
     permission_classes = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
-        user = User.objects.get(email=request.data['email'])
-        if user is not None and user.check_password(request.data['old_password']):
-            user.set_password(request.data['new_password'])
-            user.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_200_OK)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            change_password_request = serializer.data
+            user = User.objects.get(email=self.request.user.email)
+            if user is not None and user.check_password(change_password_request['old_password']) and \
+                    change_password_request['new_password'] == change_password_request['new_password_confirm']:
+                user.set_password(change_password_request['new_password'])
+                user.save()
+                return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
