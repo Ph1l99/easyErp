@@ -20,6 +20,16 @@ class ReadUpdateArticleView(APIView):
         except Article.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    def post(self, request, barcode):
+        if not Article.objects.filter(barcode=barcode).exists():
+            try:
+                serializer = self.serializer_class(data=request.data)
+                serializer.is_valid()
+                serializer.save()
+            except ValidationError:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
     def put(self, request, barcode):
         try:
             article_to_be_updated = Article.objects.get(barcode=barcode)
@@ -39,7 +49,7 @@ class ListArticleView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         articles = Article.objects.filter(is_active=True)
-        if len(articles) > 0:
+        if articles.exists():
             return Response(data=self.serializer_class(articles, many=True).data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
