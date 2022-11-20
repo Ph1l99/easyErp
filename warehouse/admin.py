@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from warehouse.article import Article
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'barcode', 'reorder_threshold')
+
+
+admin.site.register(Article, ArticleAdmin)
