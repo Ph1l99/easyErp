@@ -1,7 +1,7 @@
 from django.contrib.auth.models import update_last_login
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -41,3 +41,15 @@ class UserLoginView(CreateAPIView):
                 }
                 return Response(response, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserUpdatePasswordView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        user = User.objects.get(email=request.data['email'])
+        if user is not None and user.check_password(request.data['old_password']):
+            user.set_password(request.data['new_password'])
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
