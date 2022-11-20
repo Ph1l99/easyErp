@@ -1,1 +1,1 @@
-from .models import Article
+from warehouse.article.models import Article
