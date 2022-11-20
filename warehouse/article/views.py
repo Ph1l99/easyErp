@@ -9,7 +9,7 @@ from warehouse.article import Article
 from warehouse.article.serializers import ArticleSerializer
 
 
-class ArticleView(APIView):
+class ReadUpdateArticleView(APIView):
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated]
 
