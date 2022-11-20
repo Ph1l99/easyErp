@@ -33,7 +33,7 @@ class ReadUpdateArticleView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ArticleListView(ListAPIView):
+class ListArticleView(ListAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated]
 
