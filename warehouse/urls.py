@@ -1,8 +1,8 @@
 from django.urls import path
 
-from warehouse.article.views import ListArticleView, ReadUpdateArticleView
+from warehouse.article.views import ListArticleView, ArticleView
 
 urlpatterns = [
     path('articles', ListArticleView.as_view(), name='articles'),
-    path('articles/<str:barcode>', ReadUpdateArticleView.as_view(), name='article')
+    path('articles/<str:barcode>', ArticleView.as_view(), name='article')
 ]
