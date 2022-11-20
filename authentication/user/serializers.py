@@ -42,3 +42,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
         if user is None:
             raise serializers.ValidationError('User Not Found')
         return user
+
+
+class UserUpdatePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(max_length=128)
+    new_password = serializers.CharField(max_length=128)
+    new_password_confirm = serializers.CharField(max_length=128)
