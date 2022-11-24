@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from warehouse.article import Article
+
 
 class TransactionReference(models.Model):
     OPERATION_TYPE = [
@@ -16,7 +18,7 @@ class TransactionReference(models.Model):
 
 
 class TransactionDetail(models.Model):
-    article_identifier = models.CharField(max_length=60)
+    article = models.ForeignKey(Article, on_delete=models.RESTRICT, default=None)
     quantity = models.IntegerField(default=1)
     reference = models.ForeignKey(TransactionReference, on_delete=models.RESTRICT, blank=True)
 
