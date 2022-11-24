@@ -27,3 +27,6 @@ class Transaction(models.Model):
 
     def __str__(self):
         return str(self.id) + ' - ' + self.date_and_time.strftime('%d-%m-%-yT%H:%M:%S')
+
+    class Meta:
+        ordering = ['-id']
