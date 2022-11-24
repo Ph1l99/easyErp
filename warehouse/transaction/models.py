@@ -3,8 +3,12 @@ from django.utils import timezone
 
 
 class TransactionReference(models.Model):
+    OPERATION_TYPE = [
+        ('+', 'LOAD'),
+        ('-', 'UNLOAD')
+    ]
     description = models.CharField(max_length=50)
-    operation_type = models.CharField(max_length=1)
+    operation_type = models.CharField(max_length=1, choices=OPERATION_TYPE, default='+')
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
