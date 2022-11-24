@@ -1,5 +1,7 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import PageNumberPagination
@@ -50,4 +52,7 @@ class ListArticleView(ListAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
-    queryset = Article.objects.filter(is_active=True)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['is_active']
+    search_fields = ['name']
+    queryset = Article.objects.all()
