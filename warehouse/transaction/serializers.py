@@ -1,7 +1,13 @@
 from rest_framework import serializers
 
-from warehouse.transaction.models import Transaction, TransactionDetail
+from warehouse.transaction.models import Transaction, TransactionDetail, TransactionReference
 from warehouse.transaction.services.transaction_manager import TransactionManager
+
+
+class ListTransactionReferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionReference
+        fields = '__all__'
 
 
 class ListTransactionSerializer(serializers.ModelSerializer):
