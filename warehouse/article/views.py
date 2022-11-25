@@ -53,5 +53,5 @@ class ListArticleView(ListAPIView):
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['is_active']
-    search_fields = ['name']
+    search_fields = ['name', 'barcode']
     queryset = Article.objects.all()
