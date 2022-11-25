@@ -16,6 +16,9 @@ class TransactionReference(models.Model):
     def __str__(self):
         return self.description
 
+    class Meta:
+        ordering = ['id']
+
 
 class TransactionDetail(models.Model):
     article = models.ForeignKey(Article, on_delete=models.RESTRICT, default=None)
