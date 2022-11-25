@@ -16,6 +16,13 @@ class ListTransactionSerializer(serializers.ModelSerializer):
         fields = ['id', 'date_and_time', 'username']
 
 
+class ListTransactionDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionDetail
+        fields = '__all__'
+        depth = 1
+
+
 class CreateTransactionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionDetail

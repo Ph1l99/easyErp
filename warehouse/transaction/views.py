@@ -5,10 +5,11 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from warehouse.transaction.models import Transaction, TransactionReference
+from warehouse.transaction.models import Transaction, TransactionReference, TransactionDetail
 from warehouse.transaction.serializers import ListTransactionSerializer, CreateTransactionSerializer, \
-    ListTransactionReferenceSerializer
+    ListTransactionReferenceSerializer, ListTransactionDetailsSerializer
 
 
 class ListTransactionView(ListAPIView):
@@ -16,6 +17,19 @@ class ListTransactionView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
     queryset = Transaction.objects.all()
+
+
+class ListTransactionDetailsView(APIView):
+    serializer_class = ListTransactionDetailsSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get(self, request, transaction_id):
+        if Transaction.objects.filter(id=transaction_id).exists():
+            return Response(self.serializer_class(TransactionDetail.objects.filter(transaction__id=transaction_id),
+                                                  many=True).data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class CreateTransactionView(CreateAPIView):
