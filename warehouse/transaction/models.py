@@ -23,7 +23,7 @@ class TransactionDetail(models.Model):
     reference = models.ForeignKey(TransactionReference, on_delete=models.RESTRICT, blank=True)
 
     def __str__(self):
-        return self.id
+        return 'Trans. detail: ' + str(self.id)
 
 
 class Transaction(models.Model):
@@ -32,7 +32,7 @@ class Transaction(models.Model):
     username = models.CharField(max_length=20)
 
     def __str__(self):
-        return str(self.id) + ' - ' + self.date_and_time.strftime('%d-%m-%-yT%H:%M:%S')
+        return 'Trans. id: ' + str(self.id) + ' - Time: ' + self.date_and_time.strftime('%d-%m-%-yT%H:%M:%S')
 
     class Meta:
         ordering = ['-id']
