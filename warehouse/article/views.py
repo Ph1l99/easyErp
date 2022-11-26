@@ -27,7 +27,7 @@ class ArticleView(APIView):
         if not Article.objects.filter(barcode=barcode).exists():
             try:
                 serializer = self.serializer_class(data=request.data)
-                serializer.is_valid()
+                serializer.is_valid(raise_exception=True)
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
             except ValidationError:
