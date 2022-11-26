@@ -5,23 +5,28 @@ from warehouse.transaction.models import TransactionDetail, Transaction
 
 class TransactionManager:
     def create_transaction_and_details_from_validated_data(self, validated_data, details):
-        created_details = []
-        for transaction_detail in details:
-            try:
-                created_transaction_detail = TransactionDetail.objects.create(article=transaction_detail['article'],
-                                                                              quantity=transaction_detail[
-                                                                                  'quantity'],
-                                                                              reference=transaction_detail[
-                                                                                  'reference'])
-                created_details.append(created_transaction_detail)
-            except ValidationError:
-                if len(created_details) > 0:
-                    self._rollback_transaction_detail_creation(created_details=created_details)
-                    created_details = []
 
-        if len(created_details) > 0:
-            transaction = Transaction.objects.create(username=validated_data['username'])
-            transaction.details.set(created_details)
+        transaction = Transaction.objects.create(username=validated_data['username'])
+
+        if transaction is not None:
+            created_details = []
+            for transaction_detail in details:
+                try:
+                    created_transaction_detail = TransactionDetail.objects.create(article=transaction_detail['article'],
+                                                                                  quantity=transaction_detail[
+                                                                                      'quantity'],
+                                                                                  reference=transaction_detail[
+                                                                                      'reference'],
+                                                                                  transaction=transaction)
+                    # todo check availability in order to provide consistency
+                    created_details.append(created_transaction_detail)
+                except Exception:
+                    if len(created_details) > 0:
+                        self._rollback_transaction_detail_creation(created_details=created_details)
+                        created_details = []
+                        transaction.delete()
+                        return None
+
             return transaction
 
         return None
