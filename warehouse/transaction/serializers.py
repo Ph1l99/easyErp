@@ -7,7 +7,7 @@ from warehouse.transaction.services.transaction_manager import TransactionManage
 class ListTransactionReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionReference
-        exclude = 'is_active'
+        exclude = ['is_active']
 
 
 class ListTransactionSerializer(serializers.ModelSerializer):
