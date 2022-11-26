@@ -5,7 +5,7 @@ from authentication.user import User
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'username')
+    list_display = ('last_name', 'first_name', 'username', 'is_approved')
 
 
 class UserAdmin(admin.ModelAdmin):
