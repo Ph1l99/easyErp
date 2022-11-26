@@ -21,7 +21,7 @@ class TransactionReference(models.Model):
 
 
 class Transaction(models.Model):
-    date_and_time = models.DateTimeField(default=timezone.now())
+    date_and_time = models.DateTimeField(default=timezone.now)
     username = models.CharField(max_length=20)
 
     def __str__(self):
