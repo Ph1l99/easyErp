@@ -12,13 +12,6 @@ from warehouse.transaction.serializers import ListTransactionSerializer, CreateT
     ListTransactionReferenceSerializer, ListTransactionDetailsSerializer
 
 
-class ListTransactionView(ListAPIView):
-    serializer_class = ListTransactionSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = PageNumberPagination
-    queryset = Transaction.objects.all()
-
-
 class ListTransactionDetailsView(APIView):
     serializer_class = ListTransactionDetailsSerializer
     permission_classes = [IsAuthenticated]
@@ -30,6 +23,13 @@ class ListTransactionDetailsView(APIView):
                                                   many=True).data, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ListTransactionView(ListAPIView):
+    serializer_class = ListTransactionSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+    queryset = Transaction.objects.all()
 
 
 class CreateTransactionView(CreateAPIView):
