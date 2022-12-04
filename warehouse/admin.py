@@ -10,7 +10,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 class TransactionReferenceAdmin(admin.ModelAdmin):
-    list_display = ('description', 'operation_type', 'is_active')
+    list_display = ('id','description', 'operation_type', 'is_active')
 
 
 class TransactionDetailAdmin(admin.ModelAdmin):
@@ -21,10 +21,10 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'date_and_time')
 
 class InventoryCycleDetailAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'article', 'quantity')
 
 class InventoryCycleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'date', 'username')
 
 
 admin.site.register(Article, ArticleAdmin)
