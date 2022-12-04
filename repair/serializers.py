@@ -14,3 +14,8 @@ class ListRepairSerializer(serializers.ModelSerializer):
         model = Repair
         fields = '__all__'
         depth = 1
+
+class RepairSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Repair
+        fields = '__all__'
