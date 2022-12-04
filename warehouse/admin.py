@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from warehouse.article import Article
+from warehouse.inventory import InventoryCycleDetail, InventoryCycle
 from warehouse.transaction.models import TransactionReference, Transaction, TransactionDetail
 
 
@@ -19,8 +20,16 @@ class TransactionDetailAdmin(admin.ModelAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'date_and_time')
 
+class InventoryCycleDetailAdmin(admin.ModelAdmin):
+    pass
+
+class InventoryCycleAdmin(admin.ModelAdmin):
+    pass
+
 
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(TransactionReference, TransactionReferenceAdmin)
 admin.site.register(TransactionDetail, TransactionDetailAdmin)
 admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(InventoryCycleDetail, InventoryCycleDetailAdmin)
+admin.site.register(InventoryCycle, InventoryCycleAdmin)
