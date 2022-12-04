@@ -1,0 +1,2 @@
+class TransactionQuantityNotConsistentException(Exception):
+    pass
