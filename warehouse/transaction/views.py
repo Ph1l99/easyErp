@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from warehouse.transaction.exceptions import TransactionQuantityNotConsistentException
 from warehouse.transaction.models import Transaction, TransactionReference, TransactionDetail
 from warehouse.transaction.serializers import ListTransactionSerializer, CreateTransactionSerializer, \
     ListTransactionReferenceSerializer, ListTransactionDetailsSerializer
@@ -43,7 +44,12 @@ class CreateTransactionView(CreateAPIView):
             serializer.save()
             return Response(status=status.HTTP_200_OK)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='One or more submitted parameters are incorrect')
+        except TransactionQuantityNotConsistentException:
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data='Some items do have an inconsistent quantity. Transaction not saved')
+        except Transaction.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data='Error while processing transaction')
 
 
 class ListTransactionReferenceView(ListAPIView):
