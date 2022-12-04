@@ -20,7 +20,7 @@ class ListTransactionSerializer(serializers.ModelSerializer):
 class ListTransactionDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionDetail
-        fields = '__all__'
+        exclude = ['transaction']
         depth = 1
 
 
