@@ -8,8 +8,11 @@ class InventoryCycle(models.Model):
     date = models.DateField(default=timezone.now)
     username = models.CharField(max_length=20)
 
+    class Meta:
+        ordering = ['-date']
+
 
 class InventoryCycleDetail(models.Model):
     article = models.ForeignKey(Article, on_delete=models.RESTRICT)
     quantity = models.IntegerField(default=0)
-    cycle = models.ForeignKey(InventoryCycle, on_delete=models.RESTRICT)
+    cycle = models.ForeignKey(InventoryCycle, on_delete=models.CASCADE)
