@@ -1,0 +1,2 @@
+class InventoryManagerNotCreatedException(Exception):
+    pass
