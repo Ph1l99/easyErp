@@ -1,11 +1,11 @@
 from warehouse.article import Article
 from warehouse.inventory import InventoryCycle, InventoryCycleDetail
+from warehouse.inventory.exceptions import InventoryManagerNotCreatedException
 from warehouse.transaction import TransactionDetail
 
 
 class InventoryManager:
     def create_inventory_cycle(self, username):
-        inventory_cycle_creation_result = True
         articles_for_new_inventory_cycle = []
 
         # Loop over active articles and get current quantity
@@ -21,11 +21,8 @@ class InventoryManager:
                 InventoryCycleDetail.objects.create(article=article, quantity=new_quantity, cycle=new_inventory_cycle)
             except Exception:
                 # If an exception occurs, the whole inventory cycle is rolled back
-                inventory_cycle_creation_result = False
                 InventoryCycle.delete(new_inventory_cycle)
-                break
-
-        return inventory_cycle_creation_result
+                raise InventoryManagerNotCreatedException
 
     def get_current_quantity_for_article(self, barcode):
         # Initialize starting quantity (i.e. quantity for a specific article from the very beginning)
