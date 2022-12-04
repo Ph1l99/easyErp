@@ -24,15 +24,16 @@ class ArticleView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, barcode):
-        if not Article.objects.filter(barcode=barcode).exists():
-            try:
-                serializer = self.serializer_class(data=request.data)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            except ValidationError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            Article.objects.get(barcode=barcode)
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Article.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, barcode):
         try:
