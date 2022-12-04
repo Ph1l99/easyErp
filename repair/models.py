@@ -25,3 +25,6 @@ class Repair(models.Model):
 
     def __str__(self):
         return self.barcode
+
+    class Meta:
+        ordering = ['-insert_date_time']
