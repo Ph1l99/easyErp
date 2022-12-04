@@ -37,8 +37,12 @@ class InventoryManager:
         if last_inventory_cycle is not None:
             # If an inventory cycle is present, the starting quantity is set with the last quantity that has been computed
             starting_quantity = InventoryCycleDetail.objects.get(cycle=last_inventory_cycle).quantity
+            # All the transactions since last inventory cycle are also retrieved
             transactions_for_article = TransactionDetail.objects.filter(article__barcode=barcode,
                                                                         transaction__date_and_time__gt=last_inventory_cycle.date)
+        else:
+            # If no inventory cycle exists, all the transactions from the very beginning are retrieved
+            transactions_for_article = TransactionDetail.objects.filter(article__barcode=barcode)
 
         if len(transactions_for_article) > 0:
             for transaction in transactions_for_article:
