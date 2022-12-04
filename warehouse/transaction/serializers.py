@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from warehouse.transaction.models import Transaction, TransactionDetail, TransactionReference
 from warehouse.transaction.services.transaction_manager import TransactionManager
@@ -39,7 +40,7 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         details = validated_data.pop('details')
         if len(details) > 0:
-            return TransactionManager().create_transaction_and_details_from_validated_data(
+            return TransactionManager().create_transaction_and_details(
                 validated_data=validated_data, details=details)
         else:
-            return None
+            raise ValidationError
