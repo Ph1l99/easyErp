@@ -24,6 +24,16 @@ class RepairSerializer(serializers.ModelSerializer):
         model = Repair
         fields = '__all__'
 
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title')
+        instance.description = validated_data.get('description')
+        instance.delivery_date = validated_data.get('delivery_date')
+        instance.customer = validated_data.get('customer')
+        instance.customer_phone = validated_data.get('customer_phone')
+        instance.status = validated_data.get('status')
+        instance.save()
+        return instance
+
     def create(self, validated_data):
         if validated_data.get('barcode') == '-1':
 
