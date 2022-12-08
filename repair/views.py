@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
@@ -30,6 +31,7 @@ class ListRepairView(ListAPIView):
 
 class CreateEditGetRepairView(APIView):
     serializer_class = RepairSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, barcode):
         try:
@@ -39,10 +41,33 @@ class CreateEditGetRepairView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, barcode):
-        pass
+        try:
+            Repair.objects.get(barcode=barcode)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Repair.DoesNotExist:
+            try:
+                serializer = self.serializer_class(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            except ValidationError:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, barcode):
-        pass
+        try:
+            article_to_be_updated = Repair.objects.get(barcode=barcode)
+            serializer = self.serializer_class(article_to_be_updated, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        except Repair.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, barcode):
-        pass
+        try:
+            repair = Repair.objects.get(barcode=barcode)
+            repair.delete()
+        except Repair.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
