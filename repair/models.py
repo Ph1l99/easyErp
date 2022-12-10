@@ -5,6 +5,7 @@ from django.utils import timezone
 class RepairStatus(models.Model):
     status = models.CharField(max_length=40)
     is_active = models.BooleanField(default=True)
+    class_name = models.CharField(max_length=50, default='')
 
     def __str__(self):
         return self.status
