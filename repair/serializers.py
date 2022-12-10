@@ -15,7 +15,7 @@ class RepairStatusSerializer(serializers.ModelSerializer):
 class ListRepairSerializer(serializers.ModelSerializer):
     class Meta:
         model = Repair
-        fields = '__all__'
+        fields = ['barcode', 'title', 'description', 'delivery_date', 'status']
         depth = 1
 
 
