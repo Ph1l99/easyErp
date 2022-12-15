@@ -1,12 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.printing.exceptions import PrinterDoesNotExistException
+from core.printing.usb_thermal_printer import UsbThermalPrinter
 from repair.models import RepairStatus, Repair
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer
 
@@ -71,3 +73,17 @@ class CreateEditGetRepairView(APIView):
             repair.delete()
         except Repair.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class PrintRepairReceipt(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, barcode):
+        try:
+            thermal_printer = UsbThermalPrinter()
+            Repair.objects.get(barcode=barcode)
+            thermal_printer.print_repair_receipt(barcode=barcode)
+        except Repair.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except PrinterDoesNotExistException:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
