@@ -13,7 +13,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=30)
-    fidelity_card = models.ForeignKey(FidelityCard, on_delete=models.RESTRICT, blank=True)
+    fidelity_card = models.ForeignKey(FidelityCard, on_delete=models.RESTRICT, blank=True, null=True)
 
     def __str__(self):
         return ' '.join([self.last_name, self.first_name])
