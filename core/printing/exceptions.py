@@ -1,0 +1,2 @@
+class PrinterDoesNotExistException(Exception):
+    pass
