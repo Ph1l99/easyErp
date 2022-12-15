@@ -16,7 +16,7 @@ class UsbThermalPrinter(GenericPrinter):
         try:
             self.thermal_usb_printer = Usb(config.THERMAL_PRINTER_VENDOR_ID, config.THERMAL_PRINTER_PRODUCT_ID, 0)
         except USBNotFoundError:
-            print('USb not found')
+            print('USb not found') # todo logging
 
     def disconnect(self):
         if self.thermal_usb_printer is not None:
