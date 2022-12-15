@@ -74,6 +74,7 @@ class CreateEditGetRepairView(APIView):
         except Repair.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 class PrintRepairReceipt(APIView):
     permission_classes = [IsAuthenticated]
 

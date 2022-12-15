@@ -7,7 +7,6 @@ from core.printing.generic_printer import GenericPrinter
 
 
 class UsbThermalPrinter(GenericPrinter):
-
     thermal_usb_printer = None
 
     def __init__(self):
@@ -17,12 +16,11 @@ class UsbThermalPrinter(GenericPrinter):
         try:
             self.thermal_usb_printer = Usb(config.THERMAL_PRINTER_VENDOR_ID, config.THERMAL_PRINTER_PRODUCT_ID, 0)
         except USBNotFoundError:
-            print('USb not found') # todo logging
+            print('USb not found')  # todo logging
 
     def disconnect(self):
         if self.thermal_usb_printer is not None:
             self.thermal_usb_printer.close()
-
 
     def print_repair_receipt(self, barcode: str):
         if self.thermal_usb_printer is not None:
@@ -36,4 +34,3 @@ class UsbThermalPrinter(GenericPrinter):
             self.thermal_usb_printer.cut()
         else:
             raise PrinterDoesNotExistException
-
