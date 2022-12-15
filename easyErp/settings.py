@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'warehouse.apps.WarehouseConfig',
     'repair.apps.RepairConfig',
+    'customer.apps.CustomerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
