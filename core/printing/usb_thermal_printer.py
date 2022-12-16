@@ -28,8 +28,11 @@ class UsbThermalPrinter(GenericPrinter):
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_HEADER)
             self.thermal_usb_printer.set(align='center', text_type='normal', height=1)
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_SUB_HEADER)
+            self.thermal_usb_printer.set(font='b', align='center', text_type='normal', height=1)
+            self.thermal_usb_printer.text(config.THERMAL_PRINTER_SUB_HEADER_CONTACTS)
             self.thermal_usb_printer.barcode(barcode, 'GS1-128', function_type='B')
             self.thermal_usb_printer.text('\n')
+            self.thermal_usb_printer.set(font='a', align='center', text_type='normal', height=1)
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_FOOTER_REPAIR)
             self.thermal_usb_printer.cut()
         else:

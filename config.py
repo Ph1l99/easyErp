@@ -20,8 +20,9 @@ if ENV == 'DEV':
     # Thermal printer settings
     THERMAL_PRINTER_VENDOR_ID = 0x04b8
     THERMAL_PRINTER_PRODUCT_ID = 0x0202
-    THERMAL_PRINTER_HEADER = 'FEDE\'S ELECTRONICS\n'
-    THERMAL_PRINTER_SUB_HEADER = 'di Ossola Federico\n\n'
+    THERMAL_PRINTER_HEADER = 'FEDE\'S ELECTRONIC\n'
+    THERMAL_PRINTER_SUB_HEADER = 'di Ossola Federico\n'
+    THERMAL_PRINTER_SUB_HEADER_CONTACTS = 'Contrada Tagliabo\', 16 - 21034 Cocquio-Trevisago (VA)\nTel. 03321696500\n\n'
     THERMAL_PRINTER_FOOTER_REPAIR = 'Porta con te questo scontrino per ritirare la tua riparazione!\n'
 
 elif ENV == 'PRD':
