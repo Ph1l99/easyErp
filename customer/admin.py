@@ -8,7 +8,7 @@ class FidelityCardAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name')
+    list_display = ('id', 'last_name', 'first_name')
 
 
 admin.site.register(FidelityCard, FidelityCardAdmin)
