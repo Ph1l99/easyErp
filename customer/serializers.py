@@ -20,12 +20,13 @@ class CreateUpdateCustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['first_name', 'last_name', 'phone', 'fidelity_card']
 
+    # todo check if fidelity_card is active and is not assigned to another customer
+
 
 class GetCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = '__all__'
-        depth = 1
+        fields = ['id', 'first_name', 'last_name', 'phone', 'fidelity_card']
 
 class FidelityCardSerializer(serializers.ModelSerializer):
     class Meta:
