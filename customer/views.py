@@ -3,12 +3,12 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
+from customer.filters import FidelityCardFilter
 from customer.models import Customer, FidelityCard
 from customer.serializers import ListCustomerSerializer, ListFidelityCardSerializer, CreateUpdateCustomerSerializer, \
     GetCustomerSerializer, FidelityCardSerializer
@@ -28,7 +28,7 @@ class ListFidelityCardView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['is_active']
+    filterset_class = FidelityCardFilter
     queryset = FidelityCard.objects.all()
 
 
