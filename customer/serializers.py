@@ -26,3 +26,8 @@ class GetCustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
         depth = 1
+
+class FidelityCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FidelityCard
+        fields = '__all__'

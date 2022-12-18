@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 from customer.models import Customer, FidelityCard
 from customer.serializers import ListCustomerSerializer, ListFidelityCardSerializer, CreateUpdateCustomerSerializer, \
-    GetCustomerSerializer
+    GetCustomerSerializer, FidelityCardSerializer
 
 
 class ListCustomerView(ListAPIView):
@@ -74,4 +74,41 @@ class CustomerView(APIView):
             customer = Customer.objects.get(id=customer_id)
             return Response(data=GetCustomerSerializer(customer).data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class FidelityCardView(APIView):
+    serializer_class = FidelityCardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, barcode):
+        try:
+            FidelityCard.objects.get(barcode=barcode)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except FidelityCard.DoesNotExist:
+            try:
+                serializer = self.serializer_class(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            except ValidationError:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, barcode):
+        try:
+            fidelity_card = FidelityCard.objects.get(barcode=barcode)
+            serializer = self.serializer_class(fidelity_card, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        except FidelityCard.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, barcode):
+        try:
+            fidelity_card = FidelityCard.objects.get(barcode=barcode)
+            return Response(self.serializer_class(fidelity_card).data, status=status.HTTP_200_OK)
+        except FidelityCard.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
