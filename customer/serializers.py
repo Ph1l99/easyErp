@@ -6,7 +6,7 @@ from customer.models import Customer, FidelityCard
 class ListCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ['id', 'first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name', 'fidelity_card']
 
 
 class ListFidelityCardSerializer(serializers.ModelSerializer):
