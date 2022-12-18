@@ -8,6 +8,9 @@ class FidelityCard(models.Model):
     def __str__(self):
         return self.barcode
 
+    class Meta:
+        ordering = ['barcode']
+
 
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
