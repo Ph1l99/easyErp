@@ -3,11 +3,11 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from warehouse.article import Article
 from warehouse.article.serializers import ArticleSerializer
 
@@ -52,7 +52,7 @@ class ArticleView(APIView):
 class ListArticleView(ListAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = PageNumberPagination
+    pagination_class = EasyErpPageNumberPagination
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['is_active']
     search_fields = ['name', 'barcode']
