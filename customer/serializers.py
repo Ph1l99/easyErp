@@ -32,3 +32,5 @@ class FidelityCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = FidelityCard
         fields = '__all__'
+
+    # todo check for associated customers if the card is being deactivated
