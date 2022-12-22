@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from customer.models import Customer
+
 
 class RepairStatus(models.Model):
     status = models.CharField(max_length=40)
@@ -19,8 +21,7 @@ class Repair(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1200)
     delivery_date = models.DateField(blank=True, null=True)
-    customer = models.CharField(max_length=50)
-    customer_phone = models.CharField(max_length=30)
+    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.ForeignKey(RepairStatus, on_delete=models.RESTRICT)
     insert_date_time = models.DateTimeField(default=timezone.now)
 
