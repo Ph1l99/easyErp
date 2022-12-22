@@ -29,7 +29,6 @@ class RepairSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description')
         instance.delivery_date = validated_data.get('delivery_date')
         instance.customer = validated_data.get('customer')
-        instance.customer_phone = validated_data.get('customer_phone')
         instance.status = validated_data.get('status')
         instance.save()
         return instance
@@ -47,7 +46,6 @@ class RepairSerializer(serializers.ModelSerializer):
                                             description=validated_data.get('description'),
                                             delivery_date=validated_data.get('delivery_date'),
                                             customer=validated_data.get('customer'),
-                                            customer_phone=validated_data.get('customer'),
                                             status=validated_data.get('status'))
         else:
             raise ValidationError
