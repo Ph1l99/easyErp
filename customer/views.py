@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
+from customer.exceptions import FidelityCardAlreadyAssignedException
 from customer.filters import FidelityCardFilter
 from customer.models import Customer, FidelityCard
 from customer.serializers import ListCustomerSerializer, ListFidelityCardSerializer, CreateUpdateCustomerSerializer, \
@@ -49,6 +50,8 @@ class CustomerView(APIView):
                 return Response(status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+            except FidelityCardAlreadyAssignedException:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, customer_id):
         try:
@@ -60,6 +63,8 @@ class CustomerView(APIView):
         except Customer.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except FidelityCardAlreadyAssignedException:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, customer_id):
@@ -94,6 +99,8 @@ class FidelityCardView(APIView):
                 return Response(status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+            except FidelityCardAlreadyAssignedException:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, barcode):
         try:
@@ -105,6 +112,8 @@ class FidelityCardView(APIView):
         except FidelityCard.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except FidelityCardAlreadyAssignedException:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, barcode):
