@@ -1,0 +1,2 @@
+class FidelityCardAlreadyAssignedException(Exception):
+    pass
