@@ -3,12 +3,18 @@ from rest_framework import serializers
 import config
 from warehouse.article import Article
 from warehouse.article.services.article_manager import ArticleManager
+from warehouse.inventory.services.inventory_manager import InventoryManager
 
 
 class ArticleSerializer(serializers.ModelSerializer):
+    current_availability = serializers.SerializerMethodField(method_name='get_current_availability', read_only=True)
     class Meta:
         model = Article
         fields = '__all__'
+
+    def get_current_availability(self, obj):
+        return InventoryManager().get_current_quantity_for_article(obj.barcode)
+
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
