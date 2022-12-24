@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from customer.exceptions import FidelityCardAlreadyAssignedException
 from customer.models import Customer, FidelityCard
 from customer.services.fidelity_card_service import FidelityCardService
 
@@ -25,12 +24,17 @@ class CreateUpdateCustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         fidelity_card_service = FidelityCardService()
         if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
-            return self.create(**validated_data)
+            return Customer(**validated_data)
 
     def update(self, instance, validated_data):
         fidelity_card_service = FidelityCardService()
         if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
-            return self.update(instance, validated_data)
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+            instance.last_name = validated_data.get('last_name', instance.last_name)
+            instance.phone = validated_data.get('phone', instance.phone)
+            instance.fidelity_card = validated_data.get('fidelity_card', instance.fidelity_card)
+            instance.save()
+            return instance
 
 
 class GetCustomerSerializer(serializers.ModelSerializer):
@@ -49,11 +53,14 @@ class FidelityCardSerializer(serializers.ModelSerializer):
         fidelity_card_status = validated_data.get('is_active')
         if not fidelity_card_status:
             if not fidelity_card_service.is_fidelity_card_linked_to_customer(validated_data.get('barcode')):
-                return self.create(**validated_data)
+                return FidelityCard(**validated_data)
 
     def update(self, instance, validated_data):
         fidelity_card_service = FidelityCardService()
         fidelity_card_status = validated_data.get('is_active')
         if not fidelity_card_status:
             if not fidelity_card_service.is_fidelity_card_linked_to_customer(validated_data.get('barcode')):
-                return self.update(instance, validated_data)
+                instance.is_active = validated_data.get('is_active', instance.is_active)
+                instance.barcode = validated_data.get('barcode', instance.barcode)
+                instance.save()
+                return instance
