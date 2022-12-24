@@ -24,6 +24,7 @@ if ENV == 'DEV':
     THERMAL_PRINTER_SUB_HEADER = 'di Ossola Federico\n'
     THERMAL_PRINTER_SUB_HEADER_CONTACTS = 'Contrada Tagliabo\', 16 - 21034 Cocquio-Trevisago (VA)\nTel. 03321696500\n\n'
     THERMAL_PRINTER_FOOTER_REPAIR = 'Porta con te questo scontrino per ritirare la tua riparazione!\n'
+    INVENTORY_CYCLE_DAYS_GAP = 6
 
 elif ENV == 'PRD':
     # DB
@@ -51,3 +52,4 @@ elif ENV == 'PRD':
     THERMAL_PRINTER_HEADER = 'FEDE\'S ELECTRONICS\n'
     THERMAL_PRINTER_SUB_HEADER = 'di Ossola Federico\n\n'
     THERMAL_PRINTER_FOOTER_REPAIR = 'Porta con te questo scontrino per ritirare la tua riparazione!\n'
+    INVENTORY_CYCLE_DAYS_GAP = 6

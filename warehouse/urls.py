@@ -1,7 +1,7 @@
 from django.urls import path
 
 from warehouse.article.views import ListArticleView, ArticleView
-from warehouse.inventory.views import CreateInventoryCycleView
+from warehouse.inventory.views import CreateInventoryCycleView, GetNextInventoryCycle
 from warehouse.transaction.views import ListTransactionView, CreateTransactionView, ListTransactionReferenceView, \
     ListTransactionDetailsView
 
@@ -18,5 +18,6 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('inventory/cycle', CreateInventoryCycleView.as_view(), name='inventory_cycle')
+    path('inventory/cycle', CreateInventoryCycleView.as_view(), name='inventory_cycle'),
+    path('inventory/cycle/next', GetNextInventoryCycle.as_view(), name='next_inventory_cycle')
 ]
