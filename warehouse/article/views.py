@@ -31,8 +31,8 @@ class ArticleView(APIView):
             try:
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                article = serializer.save()
+                return Response(data=self.serializer_class(article).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -41,8 +41,8 @@ class ArticleView(APIView):
             article_to_be_updated = Article.objects.get(barcode=barcode)
             serializer = self.serializer_class(article_to_be_updated, data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            article = serializer.save()
+            return Response(data=self.serializer_class(article).data, status=status.HTTP_200_OK)
         except Article.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:

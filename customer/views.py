@@ -46,8 +46,8 @@ class CustomerView(APIView):
             try:
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                customer = serializer.save()
+                return Response(data=self.serializer_class(customer).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             except FidelityCardAlreadyAssignedException:
@@ -58,8 +58,8 @@ class CustomerView(APIView):
             customer = Customer.objects.get(id=customer_id)
             serializer = self.serializer_class(customer, data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            saved_customer = serializer.save()
+            return Response(data=self.serializer_class(saved_customer).data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
@@ -95,8 +95,8 @@ class FidelityCardView(APIView):
             try:
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                fidelity_card = serializer.save()
+                return Response(data=self.serializer_class(fidelity_card).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             except FidelityCardAlreadyAssignedException:
@@ -107,8 +107,8 @@ class FidelityCardView(APIView):
             fidelity_card = FidelityCard.objects.get(barcode=barcode)
             serializer = self.serializer_class(fidelity_card, data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            saved_fidelity_card = serializer.save()
+            return Response(data=self.serializer_class(saved_fidelity_card).data, status=status.HTTP_200_OK)
         except FidelityCard.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:

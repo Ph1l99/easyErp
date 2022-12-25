@@ -50,8 +50,8 @@ class CreateEditGetRepairView(APIView):
             try:
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                repair = serializer.save()
+                return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -60,8 +60,8 @@ class CreateEditGetRepairView(APIView):
             article_to_be_updated = Repair.objects.get(barcode=barcode)
             serializer = self.serializer_class(article_to_be_updated, data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            repair = serializer.save()
+            return Response(data=self.serializer_class(repair).data, status=status.HTTP_200_OK)
         except Repair.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
