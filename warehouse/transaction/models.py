@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from warehouse.article import Article
+from warehouse.article.models import Article
 
 
 class TransactionReference(models.Model):

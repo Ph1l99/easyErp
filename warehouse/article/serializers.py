@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 import config
-from warehouse.article import Article
+from warehouse.article.models import Article
 from warehouse.article.services.article_manager import ArticleManager
 from warehouse.inventory.services.inventory_manager import InventoryManager
 

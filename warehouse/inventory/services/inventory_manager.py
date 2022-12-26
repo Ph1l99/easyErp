@@ -1,4 +1,4 @@
-from warehouse.article import Article
+from warehouse.article.models import Article
 from warehouse.inventory import InventoryCycle, InventoryCycleDetail
 from warehouse.inventory.exceptions import InventoryManagerNotCreatedException
 from warehouse.transaction import TransactionDetail

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
-from warehouse.article import Article
+from warehouse.article.models import Article
 from warehouse.article.serializers import ArticleSerializer
 
 

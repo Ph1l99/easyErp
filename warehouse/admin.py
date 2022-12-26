@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from warehouse.article import Article
+from warehouse.article.models import Article
 from warehouse.inventory import InventoryCycleDetail, InventoryCycle
 from warehouse.transaction.models import TransactionReference, Transaction, TransactionDetail
 
