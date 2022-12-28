@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from authentication.profile import UserProfile
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from warehouse.transaction.exceptions import TransactionQuantityNotConsistentException
 from warehouse.transaction.models import Transaction, TransactionReference, TransactionDetail
@@ -39,7 +40,8 @@ class CreateTransactionView(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            serializer = self.serializer_class(data=request.data)
+            user_profile = UserProfile.objects.get(user=request.user)
+            serializer = self.serializer_class(data=request.data, context={'username': user_profile.username})
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(status=status.HTTP_200_OK)
@@ -55,7 +57,7 @@ class CreateTransactionView(CreateAPIView):
 class ListTransactionReferenceView(ListAPIView):
     serializer_class = ListTransactionReferenceSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = EasyErpPageNumberPagination
+    pagination_class = None
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['is_active']
     queryset = TransactionReference.objects.all()

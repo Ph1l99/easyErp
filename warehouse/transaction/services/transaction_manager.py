@@ -4,12 +4,13 @@ from warehouse.transaction.models import TransactionDetail, Transaction
 
 
 class TransactionManager:
-    def create_transaction_and_details(self, validated_data, details):
+    def create_transaction_and_details(self, user_identifier, details):
 
-        transaction = Transaction.objects.create(username=validated_data['username'])
+        transaction = Transaction.objects.create(username=user_identifier)
 
         if transaction is not None:
             for transaction_detail in details:
+                # todo maybe we check that only active articles may be transacted
                 # Extract the current article quantity and the one being transacted
                 current_quantity_for_article = InventoryManager().get_current_quantity_for_article(
                     transaction_detail['article'].barcode)

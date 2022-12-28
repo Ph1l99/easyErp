@@ -35,12 +35,12 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ['username', 'details']
+        fields = ['details']
 
     def create(self, validated_data):
         details = validated_data.pop('details')
-        if len(details) > 0:
+        if len(details) > 0 and 'username' in self.context:
             return TransactionManager().create_transaction_and_details(
-                validated_data=validated_data, details=details)
+                user_identifier=self.context['username'], details=details)
         else:
             raise ValidationError
