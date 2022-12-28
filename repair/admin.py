@@ -4,7 +4,7 @@ from repair.models import RepairStatus, Repair
 
 
 class RepairStatusAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'is_active', 'class_name')
+    list_display = ('id', 'status', 'is_active', 'order', 'class_name')
 
 
 class RepairAdmin(admin.ModelAdmin):
