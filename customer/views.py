@@ -20,7 +20,7 @@ class ListCustomerView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
     filter_backends = [SearchFilter]
-    search_fields = ['first_name', 'last_name']
+    search_fields = ['first_name', 'last_name', 'fidelity_card__barcode']
     queryset = Customer.objects.all()
 
 
@@ -28,8 +28,9 @@ class ListFidelityCardView(ListAPIView):
     serializer_class = ListFidelityCardSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = FidelityCardFilter
+    search_fields = ['barcode']
     queryset = FidelityCard.objects.all()
 
 
@@ -47,7 +48,7 @@ class CustomerView(APIView):
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 customer = serializer.save()
-                return Response(data=self.serializer_class(customer).data, status=status.HTTP_201_CREATED)
+                return Response(data=GetCustomerSerializer(customer).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             except FidelityCardAlreadyAssignedException:
@@ -59,7 +60,7 @@ class CustomerView(APIView):
             serializer = self.serializer_class(customer, data=request.data)
             serializer.is_valid(raise_exception=True)
             saved_customer = serializer.save()
-            return Response(data=self.serializer_class(saved_customer).data, status=status.HTTP_200_OK)
+            return Response(data=GetCustomerSerializer(saved_customer).data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
