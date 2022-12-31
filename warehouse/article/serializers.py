@@ -38,5 +38,5 @@ class ArticleSerializer(serializers.ModelSerializer):
                                              reorder_threshold=validated_data.get('reorder_threshold'),
                                              is_active=validated_data.get('is_active'))
         else:
-            article = Article(**validated_data)
+            article = Article.objects.create(**validated_data)
         return article

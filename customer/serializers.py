@@ -24,7 +24,7 @@ class CreateUpdateCustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         fidelity_card_service = FidelityCardService()
         if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
-            return Customer(**validated_data)
+            return Customer.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         fidelity_card_service = FidelityCardService()
@@ -53,9 +53,9 @@ class FidelityCardSerializer(serializers.ModelSerializer):
         fidelity_card_status = validated_data.get('is_active')
         if not fidelity_card_status:
             if not fidelity_card_service.is_fidelity_card_linked_to_customer(validated_data.get('barcode')):
-                return FidelityCard(**validated_data)
+                return FidelityCard.objects.create(**validated_data)
         else:
-            return FidelityCard(**validated_data)
+            return FidelityCard.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         fidelity_card_service = FidelityCardService()
