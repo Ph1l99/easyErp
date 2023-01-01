@@ -61,4 +61,12 @@ elif ENV == 'PRD':
     THERMAL_PRINTER_SUB_HEADER = 'di Ossola Federico\n'
     THERMAL_PRINTER_SUB_HEADER_CONTACTS = 'Contrada Tagliabo\', 16 - 21034 Cocquio-Trevisago (VA)\nTel. 03321696500\n\n'
     THERMAL_PRINTER_FOOTER_REPAIR = 'Porta con te questo scontrino per ritirare la tua riparazione!\n'
+    # Label printer settings
+    LABEL_PRINTER_MODEL = 'QL-700'
+    LABEL_PRINTER_VENDOR_ID = 0x04b8
+    LABEL_PRINTER_PRODUCT_ID = 0x04b8
+    LABEL_PRINTER_IDENTIFIER = '/dev/usb/lp0'
+    LABEL_PRINTER_LABEL_SIZE = '62x29'
+    LABEL_PRINTER_LABEL_RESIZE_DIMENSIONS = (696, 271)
+    # Inventory cycle options
     INVENTORY_CYCLE_DAYS_GAP = 6
