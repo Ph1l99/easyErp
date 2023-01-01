@@ -2,12 +2,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
+from core.printing.exceptions import PrinterDoesNotExistException
+from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.article.models import Article
 from warehouse.article.serializers import ArticleSerializer
 
@@ -57,3 +59,18 @@ class ListArticleView(ListAPIView):
     filterset_fields = ['is_active']
     search_fields = ['name', 'barcode']
     queryset = Article.objects.all()
+
+
+class PrintArticleLabel(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, barcode):
+        try:
+            label_printer = UsbLabelPrinter()
+            Article.objects.get(barcode=barcode)
+            label_printer.print_label(barcode=barcode)
+        except Article.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except PrinterDoesNotExistException:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)

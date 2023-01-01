@@ -1,13 +1,14 @@
 from django.urls import path
 
-from warehouse.article.views import ListArticleView, ArticleView
+from warehouse.article.views import ListArticleView, ArticleView, PrintArticleLabel
 from warehouse.inventory.views import CreateInventoryCycleView, GetNextInventoryCycle
 from warehouse.transaction.views import ListTransactionView, CreateTransactionView, ListTransactionReferenceView, \
     ListTransactionDetailsView
 
 urlpatterns = [
     path('articles', ListArticleView.as_view(), name='articles'),
-    path('articles/<str:barcode>', ArticleView.as_view(), name='article')
+    path('articles/<str:barcode>', ArticleView.as_view(), name='article'),
+    path('articles/<str:barcode>/label', PrintArticleLabel.as_view(), name='article_label')
 ]
 
 urlpatterns += [
