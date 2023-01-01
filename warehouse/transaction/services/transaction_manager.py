@@ -1,3 +1,4 @@
+from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.inventory.services.inventory_manager import InventoryManager
 from warehouse.transaction.exceptions import TransactionQuantityNotConsistentException
 from warehouse.transaction.models import TransactionDetail, Transaction
@@ -39,3 +40,15 @@ class TransactionManager:
              current_quantity + quantity_being_transacted > current_quantity) or \
             (current_quantity >= 0 and
              current_quantity + quantity_being_transacted >= 0)
+
+    def print_labels_for_new_articles(self, transaction):
+        label_printer = UsbLabelPrinter()
+        for transaction_detail in TransactionDetail.objects.get(transaction=transaction).all():
+            # Check if there is a LOAD operation
+            if transaction_detail.quantity > 0 and transaction_detail.reference.operation_type == '+':
+                # Loop over count
+                for quantity in range(0, transaction_detail.quantity if transaction_detail.quantity == 1 else transaction_detail.quantity + 1):
+                    try:
+                        label_printer.print_label(barcode=transaction_detail.article.barcode)
+                    except Exception:
+                        pass

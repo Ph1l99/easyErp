@@ -40,7 +40,10 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         details = validated_data.pop('details')
         if len(details) > 0 and 'username' in self.context:
-            return TransactionManager().create_transaction_and_details(
+            transaction_manager = TransactionManager()
+            created_transaction = transaction_manager.create_transaction_and_details(
                 user_identifier=self.context['username'], details=details)
+            transaction_manager.print_labels_for_new_articles(created_transaction)
+            return created_transaction
         else:
             raise ValidationError
