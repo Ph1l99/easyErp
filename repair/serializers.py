@@ -41,7 +41,7 @@ class RepairSerializer(serializers.ModelSerializer):
             while Repair.objects.filter(barcode=generated_barcode).exists():
                 generated_barcode = RepairManager.generate_unique_barcode(length=10)
 
-            article = Repair.objects.create(barcode=generated_barcode,
+            repair = Repair.objects.create(barcode=generated_barcode,
                                             title=validated_data.get('title'),
                                             description=validated_data.get('description'),
                                             delivery_date=validated_data.get('delivery_date'),
@@ -49,4 +49,4 @@ class RepairSerializer(serializers.ModelSerializer):
                                             status=validated_data.get('status'))
         else:
             raise ValidationError
-        return article
+        return repair
