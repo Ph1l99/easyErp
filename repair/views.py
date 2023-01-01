@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException
+from core.printing.usb_label_printer import UsbLabelPrinter
 from core.printing.usb_thermal_printer import UsbThermalPrinter
 from repair.models import RepairStatus, Repair
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer
@@ -51,6 +52,7 @@ class CreateEditGetRepairView(APIView):
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 repair = serializer.save()
+                # todo print label and receipt
                 return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -83,6 +85,21 @@ class PrintRepairReceipt(APIView):
             thermal_printer = UsbThermalPrinter()
             Repair.objects.get(barcode=barcode)
             thermal_printer.print_repair_receipt(barcode=barcode)
+        except Repair.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except PrinterDoesNotExistException:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
+
+class PrintRepairLabel(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, barcode):
+        try:
+            thermal_printer = UsbLabelPrinter()
+            Repair.objects.get(barcode=barcode)
+            thermal_printer.print_label(barcode=barcode)
         except Repair.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
