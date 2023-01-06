@@ -1,14 +1,16 @@
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
-from core.printing.exceptions import PrinterDoesNotExistException
+from core.api_response_message import ApiResponseMessage
+from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.article.models import Article
 from warehouse.article.serializers import ArticleSerializer
@@ -70,7 +72,12 @@ class PrintArticleLabel(APIView):
             Article.objects.get(barcode=barcode)
             label_printer.print_label(barcode_string=barcode)
         except Article.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Unable to print label. Article not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Label printer not available')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        except PrinterErrorException:
+            return Response(data=ApiResponseMessage(_('Error while printing label')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Label printed successfully')).__dict__, status=status.HTTP_200_OK)
