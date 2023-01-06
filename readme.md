@@ -21,6 +21,34 @@ The web pages (i.e. the frontend as we love to call it) have been developed as a
 The project can be downloaded and executed as is, by configuring it on a host machine. <br>
 Docker support will be added in the future.
 
+## Installation
+- Download the project
+- Install PostgreSQL and create a database named **EasyErp**
+- Initialize a virtual environment and install dependencies `pip install -r requirements.txt`
+- Set environment variables as required:
+  - ENV -> DEV or PRD
+  - DB_USERNAME -> user for PostgreSQL access
+  - DB_USER_PASSWORD -> password for PostgreSQL user
+  - DB_HOST -> PostgreSQL instance host
+- Apply migrations `python3 manage.py migrate`
+- Create a superuser `python3 manage.py createsuperuser`
+
+If you just want to try EasyErp you can run the Django development server by typing `python3 manage.py runserver 8000`.
+
+Otherwise, you have to install a web server in order to serve staticfiles and then run the project via gunicorn. [Here](https://djangodeployment.readthedocs.io/en/latest/) you can find a helpful guide.
+
+#### Printers
+The system supports two types of printing types and modes:
+- Labels on Brother-QL
+- Receipts on esc-pos printers
+
+On Linux systems, since EasyErp is using `pyusb` as backend, in order to properly access the printers,
+make sure to create a file (i.e `99-usb.rules` ) in `/etc/udev/rules.d/`. The file should contain two
+lines which have the following syntax: `SUBSYSTEM=="usb", ATTRS{idVendor}=="PRINTER_VENDOR_ID", ATTRS{idProduct}=="PRINTER_PRODUCT_ID", MODE="0666", GROUP="dialout"`.
+Then restart the service `sudo service udev restart`.
+
+Make sure to run all the above commands as root user.
+
 ## Contributors
 Thanks to [NessunoRAWRS](https://github.com/NessunoRAWRS).
 
