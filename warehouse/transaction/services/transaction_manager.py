@@ -49,6 +49,6 @@ class TransactionManager:
                 # Loop over count
                 for quantity in range(0, transaction_detail.quantity if transaction_detail.quantity == 1 else transaction_detail.quantity + 1):
                     try:
-                        label_printer.print_label(barcode=transaction_detail.article.barcode)
+                        label_printer.print_label(barcode_string=transaction_detail.article.barcode)
                     except Exception:
                         pass

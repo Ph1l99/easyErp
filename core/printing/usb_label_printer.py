@@ -1,8 +1,5 @@
-from io import BytesIO
-
-from PIL import Image
-from barcode import Gs1_128
-from barcode.writer import SVGWriter
+import barcode
+from barcode.writer import ImageWriter
 from brother_ql import BrotherQLRaster
 from brother_ql.backends.helpers import send
 from brother_ql.conversion import convert
@@ -16,6 +13,9 @@ from core.printing.generic_printer import GenericPrinter
 class UsbLabelPrinter(GenericPrinter):
     label_usb_printer = None
 
+    def __init__(self):
+        self.connect()
+
     def connect(self):
         self.label_usb_printer = BrotherQLRaster(config.LABEL_PRINTER_MODEL)
         self.label_usb_printer.exception_on_warning = True
@@ -24,14 +24,14 @@ class UsbLabelPrinter(GenericPrinter):
         if self.label_usb_printer is not None:
             self.label_usb_printer = None
 
-    def print_label(self, barcode: str):
+    def print_label(self, barcode_string: str):
         if self.label_usb_printer is not None:
             try:
                 # Create image of barcode from its string
-                barcode_image = Image.open(self._generate_barcode_image_from_string(barcode=barcode))
+                barcode_image = self._generate_barcode_image_from_string(barcode_string=barcode_string)
 
                 # Resize it to fit the label
-                barcode_image.resize(config.LABEL_PRINTER_LABEL_RESIZE_DIMENSIONS)
+                barcode_image = barcode_image.resize(config.LABEL_PRINTER_LABEL_RESIZE_DIMENSIONS)
 
                 # Create instruction set
                 instructions = convert(
@@ -50,16 +50,16 @@ class UsbLabelPrinter(GenericPrinter):
 
                 # send instructions to printer
                 send(instructions=instructions, backend_identifier='pyusb',
-                     printer_identifier=config.LABEL_PRINTER_IDENTIFIER, blocking=True)
-            except Exception:
+                     printer_identifier=config.LABEL_PRINTER_IDENTIFIER + str(
+                         config.LABEL_PRINTER_VENDOR_ID) + ':' + str(config.LABEL_PRINTER_PRODUCT_ID), blocking=True)
+            except Exception as e:
+                print(e)
                 raise PrinterErrorException
         else:
             raise PrinterDoesNotExistException
 
-    def _generate_barcode_image_from_string(self, barcode: str):
+    def _generate_barcode_image_from_string(self, barcode_string: str):
         try:
-            result_output = BytesIO()
-            Gs1_128(barcode, writer=SVGWriter()).write(result_output)
-            return result_output
-        except Exception as e:
+            return barcode.get(name='gs1_128', code=barcode_string, writer=ImageWriter()).render()
+        except Exception:
             raise PrinterBarcodeGenerationException

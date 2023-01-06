@@ -99,7 +99,7 @@ class PrintRepairLabel(APIView):
         try:
             thermal_printer = UsbLabelPrinter()
             Repair.objects.get(barcode=barcode)
-            thermal_printer.print_label(barcode=barcode)
+            thermal_printer.print_label(barcode_string=barcode)
         except Repair.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
