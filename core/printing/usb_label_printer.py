@@ -52,8 +52,7 @@ class UsbLabelPrinter(GenericPrinter):
                 send(instructions=instructions, backend_identifier='pyusb',
                      printer_identifier=config.LABEL_PRINTER_IDENTIFIER + str(
                          config.LABEL_PRINTER_VENDOR_ID) + ':' + str(config.LABEL_PRINTER_PRODUCT_ID), blocking=True)
-            except Exception as e:
-                print(e)
+            except Exception:
                 raise PrinterErrorException
         else:
             raise PrinterDoesNotExistException
