@@ -38,7 +38,7 @@ elif ENV == 'PRD':
     # DB
     DATABASE = {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'easyErp',
+        'NAME': 'EasyErp',
         'USER': os.environ.get('DB_USERNAME'),
         'PASSWORD': os.environ.get('DB_USER_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
