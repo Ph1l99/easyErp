@@ -56,6 +56,7 @@ class RepairSerializer(serializers.ModelSerializer):
 class RepairDashboardDetailSerializer(serializers.Serializer):
     status_id = serializers.IntegerField()
     status = serializers.CharField()
+    status_class = serializers.CharField()
     total_repairs = serializers.IntegerField()
 
 
