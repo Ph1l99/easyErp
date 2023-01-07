@@ -49,6 +49,15 @@ Then restart the service `sudo service udev restart`.
 
 Make sure to run all the above commands as root user.
 
+#### Internationalization
+EasyErp currently supports the following languages:
+- en-US (default)
+- it-IT
+
+After having downloaded the project make sure to run the following command in order to generate the binaries
+for translation: `django-admin compilemessages`.
+The command needs the gettext dependency to be installed.
+
 ## Contributors
 Thanks to [NessunoRAWRS](https://github.com/NessunoRAWRS).
 
