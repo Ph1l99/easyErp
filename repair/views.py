@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -13,7 +14,6 @@ from core.printing.usb_label_printer import UsbLabelPrinter
 from core.printing.usb_thermal_printer import UsbThermalPrinter
 from repair.models import RepairStatus, Repair
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer
-from django.utils.translation import gettext as _
 
 
 class ListRepairStatusView(ListAPIView):
