@@ -8,8 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.api_response_message import ApiResponseMessage
+from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.article.models import Article
@@ -25,12 +25,13 @@ class ArticleView(APIView):
             article = Article.objects.get(barcode=barcode)
             return Response(data=self.serializer_class(article).data, status=status.HTTP_200_OK)
         except Article.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Article not found')).__dict__, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, barcode):
         try:
             Article.objects.get(barcode=barcode)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Article already exists')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Article.DoesNotExist:
             try:
                 serializer = self.serializer_class(data=request.data)
@@ -38,7 +39,8 @@ class ArticleView(APIView):
                 article = serializer.save()
                 return Response(data=self.serializer_class(article).data, status=status.HTTP_201_CREATED)
             except ValidationError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, barcode):
         try:
@@ -48,9 +50,10 @@ class ArticleView(APIView):
             article = serializer.save()
             return Response(data=self.serializer_class(article).data, status=status.HTTP_200_OK)
         except Article.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Article not found')).__dict__, status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListArticleView(ListAPIView):
