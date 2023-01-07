@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-06 15:04+0100\n"
+"POT-Creation-Date: 2023-01-07 07:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,125 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: repair/views.py:92 repair/views.py:94 repair/views.py:111
-#: warehouse/article/views.py:78
+#: authentication/user/views.py:24
+msgid "User created succesfully"
+msgstr "Profilo utente creato con successo"
+
+#: authentication/user/views.py:27
+msgid "Error while creating user"
+msgstr "Errore durante la creazione del profilo utente"
+
+#: authentication/user/views.py:48
+msgid "Error during login"
+msgstr "Errore durante l'accesso al sistema"
+
+#: authentication/user/views.py:64
+msgid "Password changed succesfully"
+msgstr "Modifica password effettuata con successo"
+
+#: authentication/user/views.py:66
+msgid "Error during password change"
+msgstr "Errore durante la modifica delle credenziali di accesso"
+
+#: customer/views.py:47
+msgid "Customer already exists"
+msgstr "Cliente già presente"
+
+#: customer/views.py:56 customer/views.py:74 customer/views.py:114
+#: customer/views.py:132 repair/views.py:61 repair/views.py:75
+#: warehouse/article/views.py:42 warehouse/article/views.py:55
+msgid "Error while parsing request"
+msgstr "Errore durante l'elaborazione della richiesta"
+
+#: customer/views.py:60
+msgid ""
+"Error while creating user. Fidelity card is already assigned to another user"
+msgstr "Errore durante la creazione del cliente. Tessera fedeltà già assegnata ad un altro cliente"
+
+#: customer/views.py:71 customer/views.py:95
+msgid "Customer not found"
+msgstr "Cliente non trovato"
+
+#: customer/views.py:78
+msgid ""
+"Error while updating user. Fidelity card is already assigned to another user"
+msgstr "Errore durante l'aggiornamento del cliente. Tessera fedeltà già assegnata ad un altro cliente"
+
+#: customer/views.py:85
+msgid "Customer deleted successfully"
+msgstr "Cliente eliminato con successo"
+
+#: customer/views.py:87
+msgid "Unable to delete. Customer not found"
+msgstr "Impossibile eliminare il cliente selezionato. Il cliente non esiste"
+
+#: customer/views.py:105
+msgid "Fidelity card already exists"
+msgstr "Tessera fedeltà già presente"
+
+#: customer/views.py:118
+msgid ""
+"Error while creating fidelity card. Fidelity card is already assigned to "
+"another user"
+msgstr "Errore durante la creazione della tessera fedeltà. Tessera fedeltà già assegnata ad un altro cliente"
+
+#: customer/views.py:129 customer/views.py:144
+msgid "Fidelity card not found"
+msgstr "Tessera fedeltà non trovata"
+
+#: customer/views.py:136
+msgid ""
+"Error while updating fidelity card. Fidelity card is already assigned to "
+"another user"
+msgstr "Errore durante l'aggiornamento della tessera fedeltà. Tessera fedeltà già assegnata ad un altro cliente"
+
+#: repair/views.py:46
+msgid "Repair not found"
+msgstr "Riparazione non trovata"
+
+#: repair/views.py:51
+msgid "Repair already exists"
+msgstr "Riparazione già presente"
+
+#: repair/views.py:72
+msgid "Unable to edit. Repair not found"
+msgstr "Impossibile modificare la riparazione selezionata. La riparazione non esiste"
+
+#: repair/views.py:83
+msgid "Unable to delete. Repair not found"
+msgstr "Impossibile eliminare la riparazione selezionata. La riparazione non esiste"
+
+#: repair/views.py:96
+msgid "Unable to print receipt. Repair not found"
+msgstr "Impossibile stampare la ricevuta. La riparazione non esiste"
+
+#: repair/views.py:99
+msgid "Receipt printer not available"
+msgstr "Stampante ricevute non disponibile"
+
+#: repair/views.py:102
 msgid "Error while printing receipt"
 msgstr "Errore durante la stampa della ricevuta"
 
-#: repair/views.py:95
-msgid "Receipt printed succesfully"
-msgstr ""
+#: repair/views.py:104
+msgid "Receipt printed successfully"
+msgstr "Ricevuta stampata con successo"
+
+#: repair/views.py:116
+msgid "Unable to print label. Repair not found"
+msgstr "Impossibile stampare l'etichetta. La riparazione non esiste"
+
+#: repair/views.py:119 warehouse/article/views.py:81
+msgid "Label printer not available"
+msgstr "Stampante etichette non disponibile"
+
+#: repair/views.py:122 warehouse/article/views.py:84
+msgid "Error while printing label"
+msgstr "Errore durante la stampa dell'etichetta"
+
+#: repair/views.py:124 warehouse/article/views.py:86
+msgid "Label printed successfully"
+msgstr "Etichetta stampata con successo"
 
 #: venv/lib/python3.8/site-packages/argcomplete/my_argparse.py:127
 #: venv/lib/python3.8/site-packages/argparse.py:1821
@@ -1668,3 +1779,43 @@ msgstr ""
 #: venv/lib/python3.8/site-packages/django/views/templates/default_urlconf.html:249
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#: warehouse/article/views.py:28 warehouse/article/views.py:53
+msgid "Article not found"
+msgstr "Articolo non trovato"
+
+#: warehouse/article/views.py:33
+msgid "Article already exists"
+msgstr "Articolo già presente"
+
+#: warehouse/article/views.py:78
+msgid "Unable to print label. Article not found"
+msgstr "Impossibile stampare etichetta. L'articolo selezionato non esiste"
+
+#: warehouse/inventory/views.py:28
+msgid "Inventory cycle not created"
+msgstr "Valorizzazione magazzino virtuale non creata"
+
+#: warehouse/inventory/views.py:30
+msgid "Inventory cycle created succesfully"
+msgstr "Valorizzazione magazzino virtuale creata con successo"
+
+#: warehouse/transaction/views.py:29
+msgid "Transaction details not found"
+msgstr "Dettagli movimentazione non trovati"
+
+#: warehouse/transaction/views.py:50
+msgid "Transaction created successfully"
+msgstr "Movimentazione creata con successo"
+
+#: warehouse/transaction/views.py:53
+msgid "Error while parsing transaction"
+msgstr "Errore durante l'elaborazione della movimentazione"
+
+#: warehouse/transaction/views.py:57
+msgid "Some items do have an inconsistent quantity. Transaction not created"
+msgstr "Alcuni articoli hanno una quantità non consistente. Movimentazione non registrata"
+
+#: warehouse/transaction/views.py:60
+msgid "Error while processing transaction"
+msgstr "Errore durante l'elaborazione della movimentazione"
