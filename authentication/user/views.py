@@ -1,4 +1,5 @@
 from django.contrib.auth.models import update_last_login
+from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,6 +10,7 @@ from authentication.profile import UserProfile
 from authentication.user import User
 from authentication.user.serializers import UserRegistrationSerializer, UserLoginSerializer, \
     UserUpdatePasswordSerializer
+from core.api_response_message import ApiResponseMessage
 
 
 class UserRegistrationView(CreateAPIView):
@@ -19,9 +21,11 @@ class UserRegistrationView(CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data=ApiResponseMessage(_('User created succesfully')).__dict__,
+                            status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Error while creating user')).__dict__,
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginView(CreateAPIView):
@@ -41,7 +45,7 @@ class UserLoginView(CreateAPIView):
                     'refresh': str(refresh)
                 }
                 return Response(response, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Error during login')).__dict__, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpdatePasswordView(UpdateAPIView):
@@ -57,5 +61,7 @@ class UserUpdatePasswordView(UpdateAPIView):
                     change_password_request['new_password'] == change_password_request['new_password_confirm']:
                 user.set_password(change_password_request['new_password'])
                 user.save()
-                return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(_('Password changed succesfully')).__dict__,
+                                status=status.HTTP_200_OK)
+        return Response(data=ApiResponseMessage(_('Error during password change')).__dict__,
+                        status=status.HTTP_400_BAD_REQUEST)
