@@ -13,7 +13,9 @@ from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.article.models import Article
-from warehouse.article.serializers import ArticleSerializer
+from warehouse.article.objects import ArticleDashboardDetail
+from warehouse.article.serializers import ArticleSerializer, ArticleDashboardSerializer
+from warehouse.article.services.article_manager import ArticleManager
 
 
 class ArticleView(APIView):
@@ -84,3 +86,23 @@ class PrintArticleLabel(APIView):
             return Response(data=ApiResponseMessage(_('Error while printing label')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         return Response(data=ApiResponseMessage(_('Label printed successfully')).__dict__, status=status.HTTP_200_OK)
+
+
+class ArticleDashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ArticleDashboardSerializer
+
+    def get(self, request):
+        article_manager = ArticleManager()
+        count_articles_availability_zero = ArticleDashboardDetail(label=_('Articles with no availability'),
+                                                                  value=article_manager.get_count_articles_current_availability_equal_zero()).__dict__
+        count_articles_availability_below_reorder_threshold = ArticleDashboardDetail(
+            label=_('Articles with availability below reorder threshold'),
+            value=article_manager.get_count_articles_current_availability_below_reorder()).__dict__
+        try:
+            dashboard = self.serializer_class(data={'dashboard': [count_articles_availability_zero,
+                                                                  count_articles_availability_below_reorder_threshold]})
+            dashboard.is_valid(raise_exception=True)
+            return Response(data=dashboard.data, status=status.HTTP_200_OK)
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
