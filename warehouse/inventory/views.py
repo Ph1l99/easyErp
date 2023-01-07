@@ -1,5 +1,6 @@
 import datetime
 
+from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 
 import config
 from authentication.profile import UserProfile
+from core.api_response_message import ApiResponseMessage
 from warehouse.inventory import InventoryCycle
 from warehouse.inventory.exceptions import InventoryManagerNotCreatedException
 from warehouse.inventory.objects import NextInventoryCycle
@@ -23,8 +25,10 @@ class CreateInventoryCycleView(CreateAPIView):
             inventory_manager.create_inventory_cycle(
                 username=UserProfile.objects.get(user__id=request.user.id).username)
         except InventoryManagerNotCreatedException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Inventory cycle not created')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Inventory cycle created succesfully')).__dict__,
+                        status=status.HTTP_200_OK)
 
 
 class GetNextInventoryCycle(RetrieveAPIView):
