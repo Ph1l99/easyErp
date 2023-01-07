@@ -6,12 +6,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
-from core.printing.exceptions import PrinterDoesNotExistException
+from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
 from core.printing.usb_thermal_printer import UsbThermalPrinter
 from repair.models import RepairStatus, Repair
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer
+from django.utils.translation import gettext as _
 
 
 class ListRepairStatusView(ListAPIView):
@@ -41,12 +43,13 @@ class CreateEditGetRepairView(APIView):
             repair = Repair.objects.get(barcode=barcode)
             return Response(self.serializer_class(repair).data, status=status.HTTP_200_OK)
         except Repair.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Repair not found')).__dict__, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, barcode):
         try:
             Repair.objects.get(barcode=barcode)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Repair already exists')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Repair.DoesNotExist:
             try:
                 serializer = self.serializer_class(data=request.data)
@@ -55,7 +58,8 @@ class CreateEditGetRepairView(APIView):
                 # todo print label and receipt
                 return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, barcode):
         try:
@@ -65,16 +69,19 @@ class CreateEditGetRepairView(APIView):
             repair = serializer.save()
             return Response(data=self.serializer_class(repair).data, status=status.HTTP_200_OK)
         except Repair.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Unable to edit. Repair not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, barcode):
         try:
             repair = Repair.objects.get(barcode=barcode)
             repair.delete()
         except Repair.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Unable to delete. Repair not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 class PrintRepairReceipt(APIView):
@@ -86,10 +93,15 @@ class PrintRepairReceipt(APIView):
             Repair.objects.get(barcode=barcode)
             thermal_printer.print_repair_receipt(barcode=barcode)
         except Repair.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Unable to print receipt. Repair not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Receipt printer not available')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        except PrinterErrorException:
+            return Response(data=ApiResponseMessage(_('Error while printing receipt')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Receipt printed successfully')).__dict__, status=status.HTTP_200_OK)
 
 
 class PrintRepairLabel(APIView):
@@ -101,7 +113,12 @@ class PrintRepairLabel(APIView):
             Repair.objects.get(barcode=barcode)
             thermal_printer.print_label(barcode_string=barcode)
         except Repair.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Unable to print label. Repair not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Label printer not available')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        except PrinterErrorException:
+            return Response(data=ApiResponseMessage(_('Error while printing label')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ApiResponseMessage(_('Label printed successfully')).__dict__, status=status.HTTP_200_OK)
