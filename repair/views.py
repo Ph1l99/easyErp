@@ -12,7 +12,7 @@ from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
-from core.printing.usb_thermal_printer import UsbThermalPrinter
+from core.printing.usb_receipt_printer import UsbReceiptPrinter
 from repair.models import RepairStatus, Repair
 from repair.objects import RepairDashboardDetail
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer, RepairDashboardSerializer
@@ -58,7 +58,13 @@ class CreateEditGetRepairView(APIView):
                 serializer = self.serializer_class(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 repair = serializer.save()
-                # todo print label and receipt
+                try:
+                    receipt_printer = UsbReceiptPrinter()
+                    label_printer = UsbLabelPrinter()
+                    receipt_printer.print_repair_receipt(barcode=repair.barcode)
+                    label_printer.print_label(barcode_string=repair.barcode)
+                except PrinterDoesNotExistException or PrinterErrorException:
+                    print('Hello') # todo
                 return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
@@ -92,9 +98,9 @@ class PrintRepairReceipt(APIView):
 
     def post(self, request, barcode):
         try:
-            thermal_printer = UsbThermalPrinter()
+            receipt_printer = UsbReceiptPrinter()
             Repair.objects.get(barcode=barcode)
-            thermal_printer.print_repair_receipt(barcode=barcode)
+            receipt_printer.print_repair_receipt(barcode=barcode)
         except Repair.DoesNotExist:
             return Response(data=ApiResponseMessage(_('Unable to print receipt. Repair not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)
@@ -112,9 +118,9 @@ class PrintRepairLabel(APIView):
 
     def post(self, request, barcode):
         try:
-            thermal_printer = UsbLabelPrinter()
+            label_printer = UsbLabelPrinter()
             Repair.objects.get(barcode=barcode)
-            thermal_printer.print_label(barcode_string=barcode)
+            label_printer.print_label(barcode_string=barcode)
         except Repair.DoesNotExist:
             return Response(data=ApiResponseMessage(_('Unable to print label. Repair not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)

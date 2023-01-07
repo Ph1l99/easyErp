@@ -6,7 +6,7 @@ from core.printing.exceptions import PrinterDoesNotExistException
 from core.printing.generic_printer import GenericPrinter
 
 
-class UsbThermalPrinter(GenericPrinter):
+class UsbReceiptPrinter(GenericPrinter):
     thermal_usb_printer = None
 
     def __init__(self):
