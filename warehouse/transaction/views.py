@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from authentication.profile import UserProfile
+from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from warehouse.transaction.exceptions import TransactionQuantityNotConsistentException
 from warehouse.transaction.models import Transaction, TransactionReference, TransactionDetail
@@ -24,7 +26,8 @@ class ListTransactionDetailsView(APIView):
             return Response(self.serializer_class(TransactionDetail.objects.filter(transaction__id=transaction_id),
                                                   many=True).data, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(data=ApiResponseMessage(_('Transaction details not found')).__dict__,
+                        status=status.HTTP_404_NOT_FOUND)
 
 
 class ListTransactionView(ListAPIView):
@@ -44,14 +47,18 @@ class CreateTransactionView(CreateAPIView):
             serializer = self.serializer_class(data=request.data, context={'username': user_profile.username})
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Transaction created successfully')).__dict__,
+                            status=status.HTTP_200_OK)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data='One or more submitted parameters are incorrect')
+            return Response(data=ApiResponseMessage(_('Error while parsing transaction')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except TransactionQuantityNotConsistentException:
-            return Response(status=status.HTTP_400_BAD_REQUEST,
-                            data='Some items do have an inconsistent quantity. Transaction not saved')
+            return Response(data=ApiResponseMessage(
+                _('Some items do have an inconsistent quantity. Transaction not created')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Transaction.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND, data='Error while processing transaction')
+            return Response(data=ApiResponseMessage(_('Error while processing transaction')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 class ListTransactionReferenceView(ListAPIView):
