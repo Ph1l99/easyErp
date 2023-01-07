@@ -1,4 +1,5 @@
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _lt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -94,10 +95,14 @@ class ArticleDashboardView(APIView):
 
     def get(self, request):
         article_manager = ArticleManager()
-        count_articles_availability_zero = ArticleDashboardDetail(label=_('Articles with no availability'),
+
+        no_availability_label = _('No availability')
+        low_availability_label = _('Low availability')
+
+        count_articles_availability_zero = ArticleDashboardDetail(label=no_availability_label,
                                                                   value=article_manager.get_count_articles_current_availability_equal_zero()).__dict__
         count_articles_availability_below_reorder_threshold = ArticleDashboardDetail(
-            label=_('Articles with availability below reorder threshold'),
+            label=low_availability_label,
             value=article_manager.get_count_articles_current_availability_below_reorder()).__dict__
         try:
             dashboard = self.serializer_class(data={'dashboard': [count_articles_availability_zero,

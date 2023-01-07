@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-07 08:36+0100\n"
+"POT-Creation-Date: 2023-01-07 10:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr "Cliente già presente"
 
 #: customer/views.py:56 customer/views.py:74 customer/views.py:114
 #: customer/views.py:132 repair/views.py:64 repair/views.py:78
-#: warehouse/article/views.py:44 warehouse/article/views.py:57
+#: warehouse/article/views.py:45 warehouse/article/views.py:58
 msgid "Error while parsing request"
 msgstr "Errore durante l'elaborazione della richiesta"
 
@@ -136,15 +136,15 @@ msgstr "Ricevuta stampata con successo"
 msgid "Unable to print label. Repair not found"
 msgstr "Impossibile stampare l'etichetta. La riparazione non esiste"
 
-#: repair/views.py:122 warehouse/article/views.py:83
+#: repair/views.py:122 warehouse/article/views.py:84
 msgid "Label printer not available"
 msgstr "Stampante etichette non disponibile"
 
-#: repair/views.py:125 warehouse/article/views.py:86
+#: repair/views.py:125 warehouse/article/views.py:87
 msgid "Error while printing label"
 msgstr "Errore durante la stampa dell'etichetta"
 
-#: repair/views.py:127 warehouse/article/views.py:88
+#: repair/views.py:127 warehouse/article/views.py:89
 msgid "Label printed successfully"
 msgstr "Etichetta stampata con successo"
 
@@ -1790,25 +1790,25 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#: warehouse/article/views.py:30 warehouse/article/views.py:55
+#: warehouse/article/views.py:31 warehouse/article/views.py:56
 msgid "Article not found"
 msgstr "Articolo non trovato"
 
-#: warehouse/article/views.py:35
+#: warehouse/article/views.py:36
 msgid "Article already exists"
 msgstr "Articolo già presente"
 
-#: warehouse/article/views.py:80
+#: warehouse/article/views.py:81
 msgid "Unable to print label. Article not found"
 msgstr "Impossibile stampare etichetta. L'articolo selezionato non esiste"
 
-#: warehouse/article/views.py:97
-msgid "Articles with no availability"
-msgstr "Articoli a giacenza zero"
+#: warehouse/article/views.py:99
+msgid "No availability"
+msgstr "Giacenza zero"
 
 #: warehouse/article/views.py:100
-msgid "Articles with availability below reorder threshold"
-msgstr "Articoli sotto soglia riordino"
+msgid "Low availability"
+msgstr "Bassa disponibilità"
 
 #: warehouse/inventory/views.py:28
 msgid "Inventory cycle not created"
@@ -1839,3 +1839,6 @@ msgstr ""
 #: warehouse/transaction/views.py:60
 msgid "Error while processing transaction"
 msgstr "Errore durante l'elaborazione della movimentazione"
+
+#~ msgid "Articles with availability below reorder threshold"
+#~ msgstr "Articoli sotto soglia riordino"
