@@ -7,7 +7,7 @@ from customer.services.fidelity_card_service import FidelityCardService
 class ListCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ['id', 'first_name', 'last_name', 'fidelity_card']
+        fields = '__all__'
 
 
 class ListFidelityCardSerializer(serializers.ModelSerializer):
@@ -23,7 +23,10 @@ class CreateUpdateCustomerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         fidelity_card_service = FidelityCardService()
-        if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
+        if 'fidelity_card' in validated_data:
+            if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
+                return Customer.objects.create(**validated_data)
+        else:
             return Customer.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
