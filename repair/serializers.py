@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -42,11 +43,21 @@ class RepairSerializer(serializers.ModelSerializer):
                 generated_barcode = RepairManager.generate_unique_barcode(length=10)
 
             repair = Repair.objects.create(barcode=generated_barcode,
-                                            title=validated_data.get('title'),
-                                            description=validated_data.get('description'),
-                                            delivery_date=validated_data.get('delivery_date'),
-                                            customer=validated_data.get('customer'),
-                                            status=validated_data.get('status'))
+                                           title=validated_data.get('title'),
+                                           description=validated_data.get('description'),
+                                           delivery_date=validated_data.get('delivery_date'),
+                                           customer=validated_data.get('customer'),
+                                           status=validated_data.get('status'))
         else:
             raise ValidationError
         return repair
+
+
+class RepairDashboardDetailSerializer(serializers.Serializer):
+    status_id = serializers.IntegerField()
+    status = serializers.CharField()
+    total_repairs = serializers.IntegerField()
+
+
+class RepairDashboardSerializer(serializers.Serializer):
+    dashboard = RepairDashboardDetailSerializer(many=True)

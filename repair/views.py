@@ -1,3 +1,4 @@
+from django.db.models import Count, Q, Sum, Case, When, IntegerField
 from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -13,7 +14,9 @@ from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorE
 from core.printing.usb_label_printer import UsbLabelPrinter
 from core.printing.usb_thermal_printer import UsbThermalPrinter
 from repair.models import RepairStatus, Repair
-from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer
+from repair.objects import RepairDashboardDetail
+from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer, RepairDashboardSerializer
+from repair.services.repair_manager import RepairManager
 
 
 class ListRepairStatusView(ListAPIView):
@@ -122,3 +125,17 @@ class PrintRepairLabel(APIView):
             return Response(data=ApiResponseMessage(_('Error while printing label')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         return Response(data=ApiResponseMessage(_('Label printed successfully')).__dict__, status=status.HTTP_200_OK)
+
+
+class RepairDashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RepairDashboardSerializer
+
+    def get(self, request):
+        try:
+            dashboard_data = self.serializer_class(
+                data={'dashboard': RepairManager().get_repair_statistics_by_status()})
+            dashboard_data.is_valid(raise_exception=True)
+            return Response(data=dashboard_data.data, status=status.HTTP_200_OK)
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
