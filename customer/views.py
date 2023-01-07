@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -7,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from customer.exceptions import FidelityCardAlreadyAssignedException
 from customer.filters import FidelityCardFilter
@@ -42,7 +44,8 @@ class CustomerView(APIView):
 
         try:
             Customer.objects.get(id=customer_id)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Customer already exists')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except Customer.DoesNotExist:
             try:
                 serializer = self.serializer_class(data=request.data)
@@ -50,9 +53,12 @@ class CustomerView(APIView):
                 customer = serializer.save()
                 return Response(data=GetCustomerSerializer(customer).data, status=status.HTTP_201_CREATED)
             except ValidationError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
             except FidelityCardAlreadyAssignedException:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(
+                    _('Error while creating user. Fidelity card is already assigned to another user')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, customer_id):
         try:
@@ -62,26 +68,31 @@ class CustomerView(APIView):
             saved_customer = serializer.save()
             return Response(data=GetCustomerSerializer(saved_customer).data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Customer not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except FidelityCardAlreadyAssignedException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(
+                _('Error while updating user. Fidelity card is already assigned to another user')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, customer_id):
         try:
             customer = Customer.objects.get(id=customer_id)
             customer.delete()
-            return Response(status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Customer deleted successfully')), status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Unable to delete. Customer not found')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, customer_id):
         try:
             customer = Customer.objects.get(id=customer_id)
             return Response(data=GetCustomerSerializer(customer).data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Customer not found')).__dict__, status=status.HTTP_404_NOT_FOUND)
 
 
 class FidelityCardView(APIView):
@@ -91,7 +102,8 @@ class FidelityCardView(APIView):
     def post(self, request, barcode):
         try:
             FidelityCard.objects.get(barcode=barcode)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Fidelity card already exists')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except FidelityCard.DoesNotExist:
             try:
                 serializer = self.serializer_class(data=request.data)
@@ -99,9 +111,12 @@ class FidelityCardView(APIView):
                 fidelity_card = serializer.save()
                 return Response(data=self.serializer_class(fidelity_card).data, status=status.HTTP_201_CREATED)
             except ValidationError:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
             except FidelityCardAlreadyAssignedException:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=ApiResponseMessage(
+                    _('Error while creating fidelity card. Fidelity card is already assigned to another user')).__dict__,
+                                status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, barcode):
         try:
@@ -111,15 +126,20 @@ class FidelityCardView(APIView):
             saved_fidelity_card = serializer.save()
             return Response(data=self.serializer_class(saved_fidelity_card).data, status=status.HTTP_200_OK)
         except FidelityCard.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Fidelity card not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
         except ValidationError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
         except FidelityCardAlreadyAssignedException:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=ApiResponseMessage(
+                _('Error while updating fidelity card. Fidelity card is already assigned to another user')).__dict__,
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, barcode):
         try:
             fidelity_card = FidelityCard.objects.get(barcode=barcode)
             return Response(self.serializer_class(fidelity_card).data, status=status.HTTP_200_OK)
         except FidelityCard.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data=ApiResponseMessage(_('Fidelity card not found')).__dict__,
+                            status=status.HTTP_404_NOT_FOUND)
