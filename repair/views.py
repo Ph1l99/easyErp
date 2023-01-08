@@ -1,4 +1,3 @@
-from django.db.models import Count, Q, Sum, Case, When, IntegerField
 from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -14,7 +13,6 @@ from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorE
 from core.printing.usb_label_printer import UsbLabelPrinter
 from core.printing.usb_receipt_printer import UsbReceiptPrinter
 from repair.models import RepairStatus, Repair
-from repair.objects import RepairDashboardDetail
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer, RepairDashboardSerializer
 from repair.services.repair_manager import RepairManager
 
@@ -33,7 +31,7 @@ class ListRepairView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['status']
+    filterset_fields = ['status', 'customer__id']
     queryset = Repair.objects.all()
 
 
