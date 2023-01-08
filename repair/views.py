@@ -31,7 +31,7 @@ class ListRepairView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['status', 'customer__id']
+    filterset_fields = ['status', 'customer']
     queryset = Repair.objects.all()
 
 
