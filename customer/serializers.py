@@ -23,21 +23,19 @@ class CreateUpdateCustomerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         fidelity_card_service = FidelityCardService()
-        if 'fidelity_card' in validated_data:
-            if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
-                return Customer.objects.create(**validated_data)
-        else:
+        if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card', None)):
             return Customer.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        fidelity_card_service = FidelityCardService()
-        if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card')):
-            instance.first_name = validated_data.get('first_name', instance.first_name)
-            instance.last_name = validated_data.get('last_name', instance.last_name)
-            instance.phone = validated_data.get('phone', instance.phone)
-            instance.fidelity_card = validated_data.get('fidelity_card', instance.fidelity_card)
-            instance.save()
-            return instance
+
+def update(self, instance, validated_data):
+    fidelity_card_service = FidelityCardService()
+    if fidelity_card_service.is_fidelity_card_available(validated_data.get('fidelity_card', None)):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.fidelity_card = validated_data.get('fidelity_card', instance.fidelity_card)
+        instance.save()
+        return instance
 
 
 class GetCustomerSerializer(serializers.ModelSerializer):

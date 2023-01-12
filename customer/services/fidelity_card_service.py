@@ -6,7 +6,8 @@ class FidelityCardService:
 
     def is_fidelity_card_available(self, barcode):
         try:
-            FidelityCard.objects.get(is_active=True, barcode=barcode, customer__isnull=True)
+            if barcode is not None:
+                FidelityCard.objects.get(is_active=True, barcode=barcode, customer__isnull=True)
         except FidelityCard.DoesNotExist:
             raise FidelityCardAlreadyAssignedException
         return True
