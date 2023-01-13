@@ -31,7 +31,8 @@ Docker support will be added in the future.
   - DB_USER_PASSWORD -> password for PostgreSQL user
   - DB_HOST -> PostgreSQL instance host
 - Apply migrations `python3 manage.py migrate`
-- Create a superuser `python3 manage.py createsuperuser`
+- Create a superuser `python3 manage.py createsuperuser`. Make sure to remember the password for the superuser
+since it is needed in order to login and enable new users once they have registered themselves to EasyErp.
 
 If you just want to try EasyErp you can run the Django development server by typing `python3 manage.py runserver 8000`.
 
