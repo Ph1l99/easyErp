@@ -1,3 +1,5 @@
+import logging
+
 from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -15,6 +17,8 @@ from core.printing.usb_receipt_printer import UsbReceiptPrinter
 from repair.models import RepairStatus, Repair
 from repair.serializers import RepairStatusSerializer, ListRepairSerializer, RepairSerializer, RepairDashboardSerializer
 from repair.services.repair_manager import RepairManager
+
+logger = logging.getLogger(__name__)
 
 
 class ListRepairStatusView(ListAPIView):
@@ -62,9 +66,10 @@ class CreateEditGetRepairView(APIView):
                     receipt_printer.print_repair_receipt(barcode=repair.barcode)
                     label_printer.print_label(barcode_string=repair.barcode)
                 except PrinterDoesNotExistException or PrinterErrorException:
-                    print('Hello') # todo
+                    logger.error('Unable to print repair label or receipt. Printer not exists or input data not valid')
                 return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
+                logger.error('Error while validating repair data')
                 return Response(data=ApiResponseMessage(_('Error while parsing request')).__dict__,
                                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -103,9 +108,11 @@ class PrintRepairReceipt(APIView):
             return Response(data=ApiResponseMessage(_('Unable to print receipt. Repair not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
+            logger.error('Printer not initialized')
             return Response(data=ApiResponseMessage(_('Receipt printer not available')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         except PrinterErrorException:
+            logger.error('Printer error. Print rejected')
             return Response(data=ApiResponseMessage(_('Error while printing receipt')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         return Response(data=ApiResponseMessage(_('Receipt printed successfully')).__dict__, status=status.HTTP_200_OK)
@@ -123,9 +130,11 @@ class PrintRepairLabel(APIView):
             return Response(data=ApiResponseMessage(_('Unable to print label. Repair not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)
         except PrinterDoesNotExistException:
+            logger.error('Printer not initialized')
             return Response(data=ApiResponseMessage(_('Label printer not available')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         except PrinterErrorException:
+            logger.error('Printer error. Print rejected')
             return Response(data=ApiResponseMessage(_('Error while printing label')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
         return Response(data=ApiResponseMessage(_('Label printed successfully')).__dict__, status=status.HTTP_200_OK)

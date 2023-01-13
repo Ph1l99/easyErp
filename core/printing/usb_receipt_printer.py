@@ -1,9 +1,13 @@
+import logging
+
 from escpos.exceptions import USBNotFoundError
 from escpos.printer import Usb
 
 import config
 from core.printing.exceptions import PrinterDoesNotExistException
 from core.printing.generic_printer import GenericPrinter
+
+logger = logging.getLogger(__name__)
 
 
 class UsbReceiptPrinter(GenericPrinter):
@@ -16,7 +20,7 @@ class UsbReceiptPrinter(GenericPrinter):
         try:
             self.thermal_usb_printer = Usb(config.THERMAL_PRINTER_VENDOR_ID, config.THERMAL_PRINTER_PRODUCT_ID, 0)
         except USBNotFoundError:
-            print('USb not found')  # todo logging
+            logger.error('Usb device not found. Unable to initialize printer')
 
     def disconnect(self):
         if self.thermal_usb_printer is not None:
@@ -36,4 +40,5 @@ class UsbReceiptPrinter(GenericPrinter):
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_FOOTER_REPAIR)
             self.thermal_usb_printer.cut()
         else:
+            logger.error('Usb receipt printer does not exist')
             raise PrinterDoesNotExistException

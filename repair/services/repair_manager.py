@@ -12,7 +12,8 @@ class RepairManager:
     def generate_unique_barcode(cls, length: int):
         return ''.join(random.choices(string.digits, k=length))
 
-    def get_repair_statistics_by_status(self):
+    @classmethod
+    def get_repair_statistics_by_status(cls):
         dashboard = []
         repairs = RepairStatus.objects.annotate(total_repairs=Count('repair')).order_by('order')
         for repair in list(repairs):

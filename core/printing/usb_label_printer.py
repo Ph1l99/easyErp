@@ -1,3 +1,5 @@
+import logging
+
 import barcode
 from barcode.writer import ImageWriter
 from brother_ql import BrotherQLRaster
@@ -8,6 +10,8 @@ import config
 from core.printing.exceptions import PrinterErrorException, PrinterDoesNotExistException, \
     PrinterBarcodeGenerationException
 from core.printing.generic_printer import GenericPrinter
+
+logger = logging.getLogger(__name__)
 
 
 class UsbLabelPrinter(GenericPrinter):
@@ -53,12 +57,15 @@ class UsbLabelPrinter(GenericPrinter):
                      printer_identifier=config.LABEL_PRINTER_IDENTIFIER + str(
                          config.LABEL_PRINTER_VENDOR_ID) + ':' + str(config.LABEL_PRINTER_PRODUCT_ID), blocking=True)
             except Exception:
+                logger.error('Unable to print label')
                 raise PrinterErrorException
         else:
+            logger.error('Usb label printer does not exist')
             raise PrinterDoesNotExistException
 
     def _generate_barcode_image_from_string(self, barcode_string: str):
         try:
             return barcode.get(name='gs1_128', code=barcode_string, writer=ImageWriter()).render()
         except Exception:
+            logger.error(f'Unable to generate barcode stream from code %{barcode_string}')
             raise PrinterBarcodeGenerationException

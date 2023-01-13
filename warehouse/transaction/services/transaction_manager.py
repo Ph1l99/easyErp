@@ -1,7 +1,12 @@
+import logging
+
+from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
 from warehouse.inventory.services.inventory_manager import InventoryManager
 from warehouse.transaction.exceptions import TransactionQuantityNotConsistentException
 from warehouse.transaction.models import TransactionDetail, Transaction
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionManager:
@@ -27,6 +32,8 @@ class TransactionManager:
                                                          'reference'],
                                                      transaction=transaction)
                 else:
+                    logger.error(
+                        f'Quantity not consistent: current quantity: %{current_quantity_for_article}, transacted quantity: %{quantity_being_transacted} Rolling back transaction')
                     # If the quantity is not consistent, the whole transaction is rolled back
                     transaction.delete()
                     raise TransactionQuantityNotConsistentException
@@ -47,8 +54,10 @@ class TransactionManager:
             # Check if there is a LOAD operation
             if transaction_detail.quantity > 0 and transaction_detail.reference.operation_type == '+':
                 # Loop over count
-                for quantity in range(0, transaction_detail.quantity if transaction_detail.quantity == 1 else transaction_detail.quantity + 1):
+                for quantity in range(0,
+                                      transaction_detail.quantity if transaction_detail.quantity == 1 else transaction_detail.quantity + 1):
                     try:
                         label_printer.print_label(barcode_string=transaction_detail.article.barcode)
-                    except Exception:
-                        pass
+                    except PrinterErrorException or PrinterDoesNotExistException:
+                        logger.error('Unable to print label for article')
+                        break

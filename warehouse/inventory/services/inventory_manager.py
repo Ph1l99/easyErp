@@ -1,7 +1,11 @@
+import logging
+
 from warehouse.article.models import Article
 from warehouse.inventory import InventoryCycle, InventoryCycleDetail
 from warehouse.inventory.exceptions import InventoryManagerNotCreatedException
 from warehouse.transaction import TransactionDetail
+
+logger = logging.getLogger(__name__)
 
 
 class InventoryManager:
@@ -20,6 +24,7 @@ class InventoryManager:
             try:
                 InventoryCycleDetail.objects.create(article=article, quantity=new_quantity, cycle=new_inventory_cycle)
             except Exception:
+                logger.error('Unable to create inventory cycle. Rolling back inventory cycle')
                 # If an exception occurs, the whole inventory cycle is rolled back
                 InventoryCycle.delete(new_inventory_cycle)
                 raise InventoryManagerNotCreatedException
@@ -37,7 +42,8 @@ class InventoryManager:
         if last_inventory_cycle is not None:
             if InventoryCycleDetail.objects.filter(cycle=last_inventory_cycle, article__barcode=barcode).exists():
                 # If an inventory cycle is present, the starting quantity is set with the last quantity that has been computed
-                starting_quantity = InventoryCycleDetail.objects.get(cycle=last_inventory_cycle, article__barcode=barcode).quantity
+                starting_quantity = InventoryCycleDetail.objects.get(cycle=last_inventory_cycle,
+                                                                     article__barcode=barcode).quantity
             # All the transactions since last inventory cycle are also retrieved
             transactions_for_article = TransactionDetail.objects.filter(article__barcode=barcode,
                                                                         transaction__date_and_time__gt=last_inventory_cycle.date)
