@@ -36,7 +36,8 @@ since it is needed in order to login and enable new users once they have registe
 
 If you just want to try EasyErp you can run the Django development server by typing `python3 manage.py runserver 8000`.
 
-Otherwise, you have to install a web server in order to serve staticfiles and then run the project via gunicorn. [Here](https://djangodeployment.readthedocs.io/en/latest/) you can find a helpful guide.
+Otherwise, you have to install a web server in order to serve staticfiles and then run the project via
+gunicorn. [Here](https://djangodeployment.readthedocs.io/en/latest/) you can find a helpful guide.
 
 #### Printers
 The system supports two types of printing types and modes:
