@@ -82,7 +82,7 @@ class CustomerView(APIView):
         try:
             customer = Customer.objects.get(id=customer_id)
             customer.delete()
-            return Response(data=ApiResponseMessage(_('Customer deleted successfully')), status=status.HTTP_200_OK)
+            return Response(data=ApiResponseMessage(_('Customer deleted successfully')).__dict__, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
             return Response(data=ApiResponseMessage(_('Unable to delete. Customer not found')).__dict__,
                             status=status.HTTP_400_BAD_REQUEST)
