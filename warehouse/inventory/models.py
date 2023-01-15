@@ -5,7 +5,7 @@ from warehouse.article.models import Article
 
 
 class InventoryCycle(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     username = models.CharField(max_length=20)
 
     def __str__(self):
