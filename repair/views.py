@@ -91,6 +91,7 @@ class CreateEditGetRepairView(APIView):
         try:
             repair = Repair.objects.get(barcode=barcode)
             repair.delete()
+            return Response(status=status.HTTP_200_OK)
         except Repair.DoesNotExist:
             return Response(data=ApiResponseMessage(_('Unable to delete. Repair not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)
