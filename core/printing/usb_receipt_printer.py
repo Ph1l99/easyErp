@@ -1,5 +1,6 @@
 import logging
-
+import barcode as barcode_generator
+from barcode.writer import ImageWriter
 from escpos.exceptions import USBNotFoundError
 from escpos.printer import Usb
 
@@ -18,7 +19,7 @@ class UsbReceiptPrinter(GenericPrinter):
 
     def connect(self):
         try:
-            self.thermal_usb_printer = Usb(config.THERMAL_PRINTER_VENDOR_ID, config.THERMAL_PRINTER_PRODUCT_ID, 0)
+            self.thermal_usb_printer = Usb(config.THERMAL_PRINTER_VENDOR_ID, config.THERMAL_PRINTER_PRODUCT_ID, 0, 0x81, 0x03)
         except USBNotFoundError:
             logger.error('Usb device not found. Unable to initialize printer')
 
@@ -34,7 +35,7 @@ class UsbReceiptPrinter(GenericPrinter):
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_SUB_HEADER)
             self.thermal_usb_printer.set(font='b', align='center', text_type='normal', height=1)
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_SUB_HEADER_CONTACTS)
-            self.thermal_usb_printer.barcode(barcode, 'GS1-128', function_type='B')
+            self.thermal_usb_printer.image(barcode_generator.get(name='gs1_128', code=barcode, writer=ImageWriter()).render())
             self.thermal_usb_printer.text('\n')
             self.thermal_usb_printer.set(font='a', align='center', text_type='normal', height=1)
             self.thermal_usb_printer.text(config.THERMAL_PRINTER_FOOTER_REPAIR)

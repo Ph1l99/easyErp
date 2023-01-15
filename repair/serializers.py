@@ -1,4 +1,3 @@
-from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -37,7 +36,7 @@ class RepairSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if validated_data.get('barcode') == '-1':
 
-            generated_barcode = RepairManager.generate_unique_barcode(length=config.ARTICLE_BARCODE_LENGTH)
+            generated_barcode = RepairManager.generate_unique_barcode(length=config.REPAIR_BARCODE_LENGTH)
 
             while Repair.objects.filter(barcode=generated_barcode).exists():
                 generated_barcode = RepairManager.generate_unique_barcode(length=10)
