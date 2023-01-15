@@ -42,5 +42,5 @@ class GetNextInventoryCycle(RetrieveAPIView):
             next_inventory_cycle = last_inventory_cycle.date + datetime.timedelta(days=config.INVENTORY_CYCLE_DAYS_GAP)
 
         return Response(status=status.HTTP_200_OK, data=self.serializer_class(
-            NextInventoryCycle(last_inventory_cycle=last_inventory_cycle.date,
+            NextInventoryCycle(last_inventory_cycle=last_inventory_cycle.date if last_inventory_cycle is not None else None,
                                next_inventory_cycle=next_inventory_cycle)).data)
