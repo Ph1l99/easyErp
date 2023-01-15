@@ -1,5 +1,4 @@
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy as _lt
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
