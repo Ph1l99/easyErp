@@ -50,7 +50,7 @@ class TransactionManager:
 
     def print_labels_for_new_articles(self, transaction):
         label_printer = UsbLabelPrinter()
-        for transaction_detail in TransactionDetail.objects.get(transaction=transaction).all():
+        for transaction_detail in TransactionDetail.objects.filter(transaction=transaction):
             # Check if there is a LOAD operation
             if transaction_detail.quantity > 0 and transaction_detail.reference.operation_type == '+':
                 # Loop over count
