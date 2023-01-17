@@ -38,9 +38,9 @@ elif ENV == 'PRD':
     # DB
     DATABASE = {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'EasyErp',
+        'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USERNAME'),
-        'PASSWORD': os.environ.get('DB_USER_PASSWORD'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
         'PORT': 5432
     }
@@ -48,9 +48,9 @@ elif ENV == 'PRD':
     ALLOWED_HOSTS = ['easyerp.local']
     DEBUG = False
     CORS_ORIGIN_ALLOW_ALL = DEBUG
-    CORS_ALLOWED_ORIGINS = ['easyerp.local']
-    SECRET_KEY = ''
-    SECRET_JWT_KEY = ''
+    CORS_ALLOWED_ORIGINS = ['http://easyerp.local']
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_JWT_KEY = os.environ.get('SECRET_JWT_KEY')
     # Barcode settings
     ARTICLE_BARCODE_LENGTH = 24
     REPAIR_BARCODE_LENGTH = 8
