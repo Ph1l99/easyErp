@@ -47,8 +47,7 @@ elif ENV == 'PRD':
     # Generic settings
     ALLOWED_HOSTS = ['easyerp.local']
     DEBUG = False
-    CORS_ORIGIN_ALLOW_ALL = DEBUG
-    CORS_ALLOWED_ORIGINS = ['http://easyerp.local']
+    CORS_ALLOWED_ORIGINS = ['http://*.easyerp.local', 'http://easyerp.local', 'http://easyerp.local:3000']
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SECRET_JWT_KEY = os.environ.get('SECRET_JWT_KEY')
     # Barcode settings
