@@ -158,6 +158,12 @@ SWAGGER_SETTINGS = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s|%(name)s|%(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
@@ -166,6 +172,7 @@ LOGGING = {
             'when': 'D',
             'interval': 7,
             'backupCount': 4,
+            'formatter': 'simple',
         },
     },
     'loggers': {
