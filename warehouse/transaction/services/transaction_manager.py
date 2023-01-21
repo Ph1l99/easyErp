@@ -54,7 +54,7 @@ class TransactionManager:
             # Check if there is a LOAD operation
             if transaction_detail.quantity > 0 and transaction_detail.reference.operation_type == '+':
                 # Loop over count
-                for quantity in range(0, transaction_detail.quantity):
+                for quantity in range(0, transaction_detail.quantity - 1):
                     try:
                         print_result = label_printer.print_label(barcode_string=transaction_detail.article.barcode)
                         if print_result['did_print'] == False or print_result['ready_for_next_job'] == False:
