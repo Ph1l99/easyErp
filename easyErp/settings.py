@@ -29,8 +29,8 @@ DEBUG = DEBUG
 ALLOWED_HOSTS = ALLOWED_HOSTS
 # Cors
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
-CSRF_COOKIE_SECURE = False # Remove for ssl production
-SESSION_COOKIE_SECURE = False # Remove for ssl production
+CSRF_COOKIE_SECURE = False  # Remove for ssl production
+SESSION_COOKIE_SECURE = False  # Remove for ssl production
 
 # Application definition
 
@@ -169,9 +169,9 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
+        '': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
