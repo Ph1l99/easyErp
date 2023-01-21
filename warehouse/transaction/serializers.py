@@ -32,18 +32,21 @@ class CreateTransactionDetailSerializer(serializers.ModelSerializer):
 
 class CreateTransactionSerializer(serializers.ModelSerializer):
     details = CreateTransactionDetailSerializer(many=True)
+    print_labels = serializers.BooleanField(default=False)
 
     class Meta:
         model = Transaction
-        fields = ['details']
+        fields = ['details', 'print_labels']
 
     def create(self, validated_data):
         details = validated_data.pop('details')
+        print_labels = validated_data.pop('print_labels')
         if len(details) > 0 and 'username' in self.context:
             transaction_manager = TransactionManager()
             created_transaction = transaction_manager.create_transaction_and_details(
                 user_identifier=self.context['username'], details=details)
-            transaction_manager.print_labels_for_new_articles(created_transaction)
+            if print_labels:
+                transaction_manager.print_labels_for_new_articles(created_transaction)
             return created_transaction
         else:
             raise ValidationError
