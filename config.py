@@ -12,6 +12,7 @@ if ENV == 'DEV':
     ALLOWED_HOSTS = ['*']
     DEBUG = True
     CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOWED_ORIGINS = ['http://*']
     SECRET_KEY = 'django-insecure-286pkv6f3q60t6#58dv!dejud9!k#pa&yi7+pjz-(5n724s84l'
     SECRET_JWT_KEY = 'django-insecure-286pkv6f3q60t6#58dv!dejud9!k#pa&yi7+pjz-(5n724s84l'
     # Barcode settings
