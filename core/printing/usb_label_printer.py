@@ -53,8 +53,8 @@ class UsbLabelPrinter(GenericPrinter):
                 )
 
                 # send instructions to printer
-                send(instructions=instructions, backend_identifier='pyusb',
-                     printer_identifier=config.LABEL_PRINTER_CONNECTION_STRING, blocking=True)
+                return send(instructions=instructions, backend_identifier='pyusb',
+                            printer_identifier=config.LABEL_PRINTER_CONNECTION_STRING, blocking=True)
             except Exception:
                 logger.error('Unable to print label')
                 raise PrinterErrorException
