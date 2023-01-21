@@ -16,7 +16,7 @@ if ENV == 'DEV':
     SECRET_KEY = 'django-insecure-286pkv6f3q60t6#58dv!dejud9!k#pa&yi7+pjz-(5n724s84l'
     SECRET_JWT_KEY = 'django-insecure-286pkv6f3q60t6#58dv!dejud9!k#pa&yi7+pjz-(5n724s84l'
     # Barcode settings
-    ARTICLE_BARCODE_LENGTH = 24
+    ARTICLE_BARCODE_LENGTH = 4
     REPAIR_BARCODE_LENGTH = 8
     # Thermal printer settings
     THERMAL_PRINTER_VENDOR_ID = 0x0456
@@ -27,9 +27,7 @@ if ENV == 'DEV':
     THERMAL_PRINTER_FOOTER_REPAIR = 'Porta con te questo scontrino per ritirare la tua riparazione!\n'
     # Label printer settings
     LABEL_PRINTER_MODEL = 'QL-700'
-    LABEL_PRINTER_VENDOR_ID = 0x04f9
-    LABEL_PRINTER_PRODUCT_ID = 0x2042
-    LABEL_PRINTER_IDENTIFIER = 'usb://'
+    LABEL_PRINTER_CONNECTION_STRING = 'usb://0x04f9:0x2042'
     LABEL_PRINTER_LABEL_SIZE = '17x54'
     LABEL_PRINTER_LABEL_RESIZE_DIMENSIONS = (566, 165)
     # Inventory cycle options
