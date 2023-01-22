@@ -12,6 +12,7 @@ from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
+from warehouse.article.filters import ArticleFilter
 from warehouse.article.models import Article
 from warehouse.article.objects import ArticleDashboardDetail
 from warehouse.article.serializers import ArticleSerializer, ArticleDashboardSerializer
@@ -63,7 +64,7 @@ class ListArticleView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = EasyErpPageNumberPagination
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['is_active']
+    filterset_class = ArticleFilter
     search_fields = ['name', 'barcode']
     queryset = Article.objects.all()
 
