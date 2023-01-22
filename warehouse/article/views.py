@@ -12,7 +12,6 @@ from core.api_response_message import ApiResponseMessage
 from core.easy_erp_page_number_pagination import EasyErpPageNumberPagination
 from core.printing.exceptions import PrinterDoesNotExistException, PrinterErrorException
 from core.printing.usb_label_printer import UsbLabelPrinter
-from warehouse.article.filters import ArticleFilter
 from warehouse.article.models import Article
 from warehouse.article.objects import ArticleDashboardDetail
 from warehouse.article.serializers import ArticleSerializer, ArticleDashboardSerializer
@@ -99,15 +98,16 @@ class ArticleDashboardView(APIView):
         no_availability_label = _('No availability')
         low_availability_label = _('Low availability')
 
-        count_articles_availability_zero = ArticleDashboardDetail(label=no_availability_label,
-                                                                  value=article_manager.get_count_articles_current_availability_equal_zero()).__dict__
-        count_articles_availability_below_reorder_threshold = ArticleDashboardDetail(
-            label=low_availability_label,
-            value=article_manager.get_count_articles_current_availability_below_reorder()).__dict__
+        articles_availability_zero = article_manager.get_articles_current_availability_equal_zero()
+        articles_availability_below_reorder_threshold = article_manager.get_articles_current_availability_below_reorder()
         try:
-            dashboard = self.serializer_class(data={'dashboard': [count_articles_availability_zero,
-                                                                  count_articles_availability_below_reorder_threshold]})
-            dashboard.is_valid(raise_exception=True)
+            dashboard = self.serializer_class({'dashboard': [
+                ArticleDashboardDetail(label=no_availability_label, value=len(articles_availability_zero),
+                                       items=articles_availability_zero).__dict__,
+                ArticleDashboardDetail(
+                    label=low_availability_label,
+                    value=len(articles_availability_below_reorder_threshold),
+                    items=articles_availability_below_reorder_threshold).__dict__]})
             return Response(data=dashboard.data, status=status.HTTP_200_OK)
         except ValidationError:
             return Response(status=status.HTTP_400_BAD_REQUEST)

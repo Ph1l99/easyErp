@@ -45,6 +45,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 class ArticleDashboardDetailSerializer(serializers.Serializer):
     label = serializers.CharField()
     value = serializers.IntegerField()
+    items = ArticleSerializer(many=True)
 
 
 class ArticleDashboardSerializer(serializers.Serializer):
