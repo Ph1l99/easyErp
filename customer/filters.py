@@ -1,4 +1,4 @@
-from django_filters import rest_framework as filters
+import django_filters.rest_framework as filters
 
 from customer.models import FidelityCard
 
