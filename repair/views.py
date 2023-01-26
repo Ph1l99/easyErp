@@ -65,7 +65,7 @@ class CreateEditGetRepairView(APIView):
                     label_printer = UsbLabelPrinter()
                     receipt_printer.print_repair_receipt(barcode=repair.barcode)
                     label_printer.print_label(barcode_string=repair.barcode)
-                except PrinterDoesNotExistException or PrinterErrorException:
+                except PrinterDoesNotExistException or PrinterErrorException or Exception:
                     logger.error('Unable to print repair label or receipt. Printer not exists or input data not valid')
                 return Response(data=self.serializer_class(repair).data, status=status.HTTP_201_CREATED)
             except ValidationError:
