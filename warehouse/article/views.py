@@ -76,6 +76,7 @@ class PrintArticleLabel(APIView):
             label_printer = UsbLabelPrinter()
             Article.objects.get(barcode=barcode)
             label_printer.print_label(barcode_string=barcode)
+            label_printer.disconnect()
         except Article.DoesNotExist:
             return Response(data=ApiResponseMessage(_('Unable to print label. Article not found')).__dict__,
                             status=status.HTTP_404_NOT_FOUND)

@@ -49,17 +49,18 @@ class TransactionManager:
              current_quantity + quantity_being_transacted >= 0)
 
     def print_labels_for_new_articles(self, transaction):
-        label_printer = UsbLabelPrinter()
         for transaction_detail in TransactionDetail.objects.filter(transaction=transaction):
             # Check if there is a LOAD operation
             if transaction_detail.quantity > 0 and transaction_detail.reference.operation_type == '+':
                 # Loop over count
                 for quantity in range(0, transaction_detail.quantity - 1):
+                    label_printer = UsbLabelPrinter()
                     try:
                         print_result = label_printer.print_label(barcode_string=transaction_detail.article.barcode)
                         if print_result['did_print'] == False or print_result['ready_for_next_job'] == False:
                             logger.error('Unable to print. Printer not receiving instructions')
                             break
+                        label_printer.disconnect()
                     except PrinterErrorException or PrinterDoesNotExistException:
                         logger.error('Unable to print label for article')
                         break
